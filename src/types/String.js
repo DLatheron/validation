@@ -4,7 +4,7 @@ const Any = require('./Any');
 
 class _String extends Any {
     constructor() {
-        super();
+        super('string');
 
         return this.isString();
     }
@@ -13,7 +13,7 @@ class _String extends Any {
         return this.register(
             (value) => {
                 if (typeof value !== 'string') {
-                    throw new Error('Not a string');
+                    this.throwValidationFailure('Not a string');
                 }
                 return value;
             },
@@ -27,7 +27,7 @@ class _String extends Any {
         return this.register(
             (value) => {
                 if (value.length === 0) {
-                    throw new Error('Cannot be empty');
+                    this.throwValidationFailure('Cannot be empty');
                 }
                 return value;
             }
@@ -38,7 +38,7 @@ class _String extends Any {
         return this.register(
             (value) => {
                 if (value.length < minLen) {
-                    throw new Error('Too short');
+                    this.throwValidationFailure('Too short');
                 }
                 return value;
             }
@@ -49,7 +49,7 @@ class _String extends Any {
         return this.register(
             (value) => {
                 if (value.length > maxLen) {
-                    throw new Error('Too long');
+                    this.throwValidationFailure('Too long');
                 }
                 return value;
             }

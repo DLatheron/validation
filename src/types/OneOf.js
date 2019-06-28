@@ -4,7 +4,7 @@ const Any = require('./Any');
 
 class _OneOf extends Any {
     constructor(options) {
-        super();
+        super('oneOf');
 
         return this.oneOf(options);
     }
@@ -25,9 +25,10 @@ class _OneOf extends Any {
                         return true;
                     }
                 })) {
-                    const aggregateError = new Error('Aggregate error');
-                    aggregateError.errors = errors;
-                    throw aggregateError;
+                    this.throwValidationFailure(
+                        'Aggregate error',
+                        { errors }
+                    );
                 }
 
                 return value;

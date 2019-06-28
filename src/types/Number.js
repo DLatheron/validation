@@ -4,7 +4,7 @@ const Any = require('./Any');
 
 class _Number extends Any {
     constructor() {
-        super();
+        super('number');
 
         return this.isNumber();
     }
@@ -13,7 +13,7 @@ class _Number extends Any {
         return this.register(
             (value) => {
                 if (typeof value !== 'number') {
-                    throw new Error('Not a number');
+                    this.throwValidationFailure('Not a number');
                 }
                 return value;
             },
@@ -27,7 +27,7 @@ class _Number extends Any {
         return this.register(
             (value) => {
                 if (value < min) {
-                    throw new Error('Too low');
+                    this.throwValidationFailure('Too low');
                 }
 
                 return value;
@@ -39,7 +39,7 @@ class _Number extends Any {
         return this.register(
             (value) => {
                 if (value > max) {
-                    throw new Error('Too high');
+                    this.throwValidationFailure('Too high');
                 }
                 return value;
             }
@@ -50,9 +50,9 @@ class _Number extends Any {
         return this.register(
             (value) => {
                 if (rge.min !== undefined && value < min) {
-                    throw new Error('Too low for range');
+                    this.throwValidationFailure('Too low for range');
                 } else if (max !== undefined && value > max) {
-                    throw new Error('Too high for range');
+                    this.throwValidationFailure('Too high for range');
                 }
                 return value;
             }
@@ -70,7 +70,7 @@ class _Number extends Any {
                     }
                     return true;
                 })) {
-                    throw new Error('Not in range');
+                    this.throwValidationFailure('Not in range');
                 }
                 return value;
             }
@@ -81,7 +81,7 @@ class _Number extends Any {
         return this.register(
             (value) => {
                 if (value < 0) {
-                    throw new Error('Not positive');
+                    this.throwValidationFailure('Not positive');
                 }
                 return value;
             }
@@ -92,7 +92,7 @@ class _Number extends Any {
         return this.register(
             (value) => {
                 if (value > 0) {
-                    throw new Error('Not negative');
+                    this.throwValidationFailure('Not negative');
                 }
                 return value;
             }
@@ -103,7 +103,7 @@ class _Number extends Any {
         return this.register(
             (value) => {
                 if (value === 0) {
-                    throw new Error('Is zero');
+                    this.throwValidationFailure('Is zero');
                 }
                 return value;
             }
@@ -114,7 +114,7 @@ class _Number extends Any {
         return this.register(
             (value) => {
                 if (value % 2 !== 0) {
-                    throw new Error('Not even');
+                    this.throwValidationFailure('Not even');
                 }
                 return value;
             }
@@ -125,7 +125,7 @@ class _Number extends Any {
         return this.register(
             (value) => {
                 if (value % 2 !== 1) {
-                    throw new Error('Not odd');
+                    this.throwValidationFailure('Not odd');
                 }
                 return value;
             }

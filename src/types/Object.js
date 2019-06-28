@@ -4,7 +4,7 @@ const Any = require('./Any');
 
 class _Object extends Any {
     constructor(contents, options) {
-        super();
+        super('object');
 
         return this.isObject(contents, options);
     }
@@ -13,17 +13,21 @@ class _Object extends Any {
         return this.register(
             (value) => {
                 if (!allowAdditionalProperties) {
-                    for (let [key] of Object.entries(value)) {
-                        if (!contents[key]) {
-                            throw new Error('Unexpected property');
+                    for (let [propertyName] of Object.entries(value)) {
+                        if (!contents[propertyName]) {
+                            this.throwValidationFailure(
+                                'Unexpected property',
+                                { propertyName }
+                            );
                         }
                     }
                 }
 
-                for (let [key] of Object.entries(contents)) {
+                for (let [propertyName] of Object.entries(contents)) {
                     try {
-                        contents[key]._validate(value[key]);
+                        contents[propertyName]._validate(value[propertyName]);
                     } catch (error) {
+                        error.addPropertyName(propertyName);
                         throw error;
                     }
                 }

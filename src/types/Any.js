@@ -1,7 +1,11 @@
 'use strict';
 
+const ValidationError = require('../ValidationError');
+
 class Any {
-    constructor() {
+    constructor(type) {
+        this.type = type;
+
         this.validations = [];
         this.coersions = [];
     }
@@ -15,12 +19,28 @@ class Any {
         }
     }
 
+    validateNoCatch(value) {
+        this._validate(value);
+    }
+
+    validateWithErrors(value) {
+        try {
+            this._validate(value);
+        } catch (error) {
+            return error;
+        }
+    }
+
     coerce(value) {
         try {
             return this._coerce(value);
         } catch (error) {
             return false;
         }
+    }
+
+    coerceNoCatch(value) {
+        return this._coerce(value);
     }
 
     _validate(value) {
@@ -47,7 +67,14 @@ class Any {
     }
 
     cannotCoerse() {
-        throw new Error('Unable to coerse value with this type');
+        this.throwValidationFailure('Unable to coerse value with this type');
+    }
+
+    throwValidationFailure(reason, additionalProperties) {
+        throw new ValidationError(reason, {
+            type: this.type,
+            ...additionalProperties
+        });
     }
 }
 
