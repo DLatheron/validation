@@ -1,0 +1,15 @@
+{
+    "name": "validation",
+    "version": "0.0.1",
+    "description": "Validation library",
+    "main": "index.js",
+    "scripts": {
+        "test": "./node_modules/jest/bin/jest.js",
+        "test:watch": "npm test -- --watchAll"
+    },
+    "author": "D.Latheron",
+    "license": "ISC",
+    "devDependencies": {
+        "jest": "^24.8.0"
+    }
+}
