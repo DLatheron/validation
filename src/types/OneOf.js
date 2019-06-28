@@ -33,7 +33,7 @@ class _OneOf extends Any {
 
                 return value;
             }
-        )
+        );
     }
 }
 

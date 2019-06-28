@@ -18,7 +18,8 @@ class _Number extends Any {
                 return value;
             },
             (coerce) => {
-                return new Number(coerce).valueOf();
+                // eslint-disable-next-line no-new-wrappers
+                return (new Number(coerce)).valueOf();
             }
         );
     }
@@ -49,7 +50,7 @@ class _Number extends Any {
     range({ min, max }) {
         return this.register(
             (value) => {
-                if (rge.min !== undefined && value < min) {
+                if (min !== undefined && value < min) {
                     this.throwValidationFailure('Too low for range');
                 } else if (max !== undefined && value > max) {
                     this.throwValidationFailure('Too high for range');
@@ -85,7 +86,7 @@ class _Number extends Any {
                 }
                 return value;
             }
-        )
+        );
     }
 
     negative() {
@@ -96,7 +97,7 @@ class _Number extends Any {
                 }
                 return value;
             }
-        )
+        );
     }
 
     nonZero() {
@@ -107,7 +108,7 @@ class _Number extends Any {
                 }
                 return value;
             }
-        )
+        );
     }
 
     even() {
@@ -118,7 +119,7 @@ class _Number extends Any {
                 }
                 return value;
             }
-        )
+        );
     }
 
     odd() {
@@ -129,7 +130,7 @@ class _Number extends Any {
                 }
                 return value;
             }
-        )
+        );
     }
 };
 

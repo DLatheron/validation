@@ -63,10 +63,10 @@ describe('validation', () => {
         expect(schema.validate(' ')).toStrictEqual(true);
 
         expect(schema.validate('')).toStrictEqual(false);
-        expect(schema.validateWithErrors('')).toMatchObject({ message: 'Cannot be empty'});
+        expect(schema.validateWithErrors('')).toMatchObject({ message: 'Cannot be empty' });
 
         expect(schema.validate('01234567890123456789+')).toStrictEqual(false);
-        expect(schema.validateWithErrors('01234567890123456789+')).toMatchObject({ message: 'Too long'});
+        expect(schema.validateWithErrors('01234567890123456789+')).toMatchObject({ message: 'Too long' });
     });
 
     it('should allow the validation of either types', () => {

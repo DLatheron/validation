@@ -1,0 +1,17 @@
+/node_modules/**
+/tmp/**
+/coverage/**
+/results/**
+package.json
+
+/migration/node_modules/**
+/migration/tmp/**
+/migration/coverage/**
+/migration/results/**
+/migration/package.json
+
+/client/node_modules/**
+/client/dist/**
+/client/build/**
+/client/tmp/**
+/client/package.json

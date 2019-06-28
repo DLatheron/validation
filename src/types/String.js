@@ -18,6 +18,7 @@ class _String extends Any {
                 return value;
             },
             (coerce) => {
+                // eslint-disable-next-line no-new-wrappers
                 return new String(coerce).valueOf();
             }
         );
@@ -31,7 +32,7 @@ class _String extends Any {
                 }
                 return value;
             }
-        )
+        );
     }
 
     minLength(minLen) {
@@ -42,7 +43,7 @@ class _String extends Any {
                 }
                 return value;
             }
-        )
+        );
     }
 
     maxLength(maxLen) {
@@ -53,7 +54,7 @@ class _String extends Any {
                 }
                 return value;
             }
-        )
+        );
     }
 }
 

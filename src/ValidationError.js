@@ -7,7 +7,7 @@ class ValidationError extends Error {
         this.errors = errors;
         this.propertyNames = [];
         if (propertyName) {
-            this.propertyNames.push(propertyName)
+            this.propertyNames.push(propertyName);
         }
     }
 

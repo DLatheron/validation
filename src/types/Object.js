@@ -13,7 +13,7 @@ class _Object extends Any {
         return this.register(
             (value) => {
                 if (!allowAdditionalProperties) {
-                    for (let [propertyName] of Object.entries(value)) {
+                    for (const [propertyName] of Object.entries(value)) {
                         if (!contents[propertyName]) {
                             this.throwValidationFailure(
                                 'Unexpected property',
@@ -23,7 +23,7 @@ class _Object extends Any {
                     }
                 }
 
-                for (let [propertyName] of Object.entries(contents)) {
+                for (const [propertyName] of Object.entries(contents)) {
                     try {
                         contents[propertyName]._validate(value[propertyName]);
                     } catch (error) {
