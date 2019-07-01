@@ -44,9 +44,23 @@ class Any {
     }
 
     _validate(value) {
-        this.validations.forEach(validation => {
-            value = validation(value);
-        });
+        // NOTE: This controls the process of each and every validation.
+        function recurseValidation(validations, value) {
+            while (validations.length > 0) {
+                const validation = validations.pop();
+
+                value = validation(value, value =>
+                    recurseValidation(validations, value)
+                );
+            }
+
+            return value;
+        }
+
+        const clonedValidations = [...this.validations];
+        clonedValidations.reverse();
+
+        return recurseValidation(clonedValidations, value);
     }
 
     _coerce(value) {

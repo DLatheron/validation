@@ -2,24 +2,28 @@
 
 const Any = require('./Any');
 
-class _String extends Any {
-    constructor() {
-        super('string');
+class _Array extends Any {
+    constructor(schema) {
+        super('array');
 
-        return this.isString();
+        return this.isArray(schema);
     }
 
-    isString() {
+    isArray(schema) {
         return this.register(
             (value) => {
-                if (typeof value !== 'string') {
-                    this.throwValidationFailure('Not a string');
+                if (!Array.isArray(value, next)) {
+                    this.throwValidationFailure('Not an array');
                 }
+
+                // TODO: Do something with the contents...
+                // TODO: It would be good if we could execute the lower level validation
+                //       first...
+                value.forEach((v) => {
+                    schema._validate(v);
+                });
+
                 return value;
-            },
-            (coerce) => {
-                // eslint-disable-next-line no-new-wrappers
-                return new String(coerce).valueOf();
             }
         );
     }
@@ -31,6 +35,9 @@ class _String extends Any {
                     this.throwValidationFailure('Cannot be empty');
                 }
                 return value;
+            },
+            (coerce) => {
+                return coerce || [];
             }
         );
     }
@@ -58,4 +65,4 @@ class _String extends Any {
     }
 }
 
-module.exports = _String;
+module.exports = _Array;
