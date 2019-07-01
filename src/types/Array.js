@@ -11,14 +11,26 @@ class _Array extends Any {
 
     isArray(schema) {
         return this.register(
-            (value) => {
-                if (!Array.isArray(value, next)) {
+            (value, next) => {
+                if (!Array.isArray(value)) {
                     this.throwValidationFailure('Not an array');
                 }
 
-                // TODO: Do something with the contents...
-                // TODO: It would be good if we could execute the lower level validation
-                //       first...
+                value = next(value);
+
+                value.forEach(v => {
+                    schema._validate(v);
+                });
+
+                return value;
+            },
+            (value, next) => {
+                if (!Array.isArray(value)) {
+                    value = [];
+                }
+
+                value = next(value);
+
                 value.forEach((v) => {
                     schema._validate(v);
                 });

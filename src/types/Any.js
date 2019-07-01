@@ -44,30 +44,37 @@ class Any {
     }
 
     _validate(value) {
-        // NOTE: This controls the process of each and every validation.
-        function recurseValidation(validations, value) {
-            while (validations.length > 0) {
-                const validation = validations.pop();
+        const validationStack = [...this.validations];
+        validationStack.reverse();
 
-                value = validation(value, value =>
-                    recurseValidation(validations, value)
-                );
+        function recurseValidations(value) {
+            while (validationStack.length > 0) {
+                const validation = validationStack.pop();
+
+                value = validation(value, recurseValidations);
             }
 
             return value;
         }
 
-        const clonedValidations = [...this.validations];
-        clonedValidations.reverse();
-
-        return recurseValidation(clonedValidations, value);
+        return recurseValidations(value);
     }
 
     _coerce(value) {
-        this.coersions.forEach(coersion => {
-            value = coersion(value);
-        });
-        return value;
+        const coersionStack = [...this.coersions];
+        coersionStack.reverse();
+
+        function recurseCoersions(value) {
+            while (coersionStack.length > 0) {
+                const coersion = coersionStack.pop();
+
+                value = coersion(value, recurseCoersions);
+            }
+
+            return value;
+        }
+
+        return recurseCoersions(value);
     }
 
     register(validation, coersion) {
