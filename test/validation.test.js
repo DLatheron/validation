@@ -153,4 +153,19 @@ describe('validation', () => {
 
         expect(schema.coerce()).toStrictEqual([]);
     });
+
+    it('should value booleans', () => {
+        const schema = Validate
+            .Boolean()
+            .is(true);
+
+        expect(schema.validate(true)).toBe(true);
+        expect(schema.coerce(23)).toBe(true);
+        expect(schema.coerce('true')).toBe(true);
+        expect(schema.coerce('1')).toBe(true);
+        expect(schema.coerce('yes')).toBe(true);
+
+        expect(schema.validate(false)).toBe(false);
+        expect(schema.coerce('false')).toBe(false);
+    });
 });

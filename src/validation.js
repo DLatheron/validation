@@ -8,6 +8,7 @@
 // -
 
 const _Array = require('./types/Array');
+const _Boolean = require('./types/Boolean');
 const _Number = require('./types/Number');
 const _Object = require('./types/Object');
 const _OneOf = require('./types/OneOf');
@@ -16,6 +17,7 @@ const _String = require('./types/String');
 const Validate = () => {
     return {
         Array: function() { return new _Array(...arguments); },
+        Boolean: function() { return new _Boolean(...arguments); },
         Number: function() { return new _Number(...arguments); },
         Object: function() { return new _Object(...arguments); },
         OneOf: function() { return new _OneOf(...arguments); },
