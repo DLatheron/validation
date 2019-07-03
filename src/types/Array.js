@@ -6,14 +6,17 @@ class _Array extends Any {
     constructor(schema) {
         super('array');
 
+        this._defaultValue = [];
+
         return this.isArray(schema);
     }
 
+    // CanCoerce: cast existing value to array?
     isArray(schema) {
-        return this.register(
+        return this._register(
             (value, next) => {
                 if (!Array.isArray(value)) {
-                    this.throwValidationFailure('Not an array');
+                    this._throwValidationFailure('Not an array');
                 }
 
                 value = next(value);
@@ -40,11 +43,12 @@ class _Array extends Any {
         );
     }
 
+    // CanCoerce: empty array.
     notEmpty() {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value.length === 0) {
-                    this.throwValidationFailure('Cannot be empty');
+                    this._throwValidationFailure('Cannot be empty');
                 }
                 return value;
             },
@@ -54,22 +58,24 @@ class _Array extends Any {
         );
     }
 
+    // CanCoerce: Add any default objects?
     minLength(minLength) {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value.length < minLength) {
-                    this.throwValidationFailure('Too short');
+                    this._throwValidationFailure('Too short');
                 }
                 return value;
             }
         );
     }
 
+    // CanCoerce: Remove additional elements?
     maxLength(maxLength) {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value.length > maxLength) {
-                    this.throwValidationFailure('Too long');
+                    this._throwValidationFailure('Too long');
                 }
                 return value;
             }

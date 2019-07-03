@@ -6,14 +6,16 @@ class _String extends Any {
     constructor() {
         super('string');
 
+        this._defaultValue = '';
+
         return this.isString();
     }
 
     isString() {
-        return this.register(
+        return this._register(
             (value) => {
                 if (typeof value !== 'string') {
-                    this.throwValidationFailure('Not a string');
+                    this._throwValidationFailure('Not a string');
                 }
                 return value;
             },
@@ -25,10 +27,10 @@ class _String extends Any {
     }
 
     notEmpty() {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value.length === 0) {
-                    this.throwValidationFailure('Cannot be empty');
+                    this._throwValidationFailure('Cannot be empty');
                 }
                 return value;
             }
@@ -36,10 +38,10 @@ class _String extends Any {
     }
 
     minLength(minLength) {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value.length < minLength) {
-                    this.throwValidationFailure('Too short');
+                    this._throwValidationFailure('Too short');
                 }
                 return value;
             }
@@ -47,10 +49,10 @@ class _String extends Any {
     }
 
     maxLength(maxLength) {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value.length > maxLength) {
-                    this.throwValidationFailure('Too long');
+                    this._throwValidationFailure('Too long');
                 }
                 return value;
             }

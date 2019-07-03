@@ -166,7 +166,7 @@ describe('validation', () => {
         expect(schema.coerce('yes')).toBe(true);
 
         expect(schema.validate(false)).toBe(false);
-        expect(schema.coerce('false')).toBe(undefined);
+        expect(schema.coerce('false')).toBe(false);
     });
 
     it('should validate optional values', () => {

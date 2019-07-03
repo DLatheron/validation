@@ -12,7 +12,7 @@ describe('Any', () => {
     });
 
     function expectation({ order, inValue, outValue }) {
-        any.register(value => {
+        any._register(value => {
             expect(value).toBe(inValue);
             expect(trackedOrder++).toBe(order);
             return outValue;
@@ -20,7 +20,7 @@ describe('Any', () => {
     }
 
     function expectationNext({ order, inValue, outValue }) {
-        any.register((value, next) => {
+        any._register((value, next) => {
             expect(value).toBe(inValue);
             expect(trackedOrder++).toBe(order);
             return next(outValue);

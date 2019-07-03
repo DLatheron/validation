@@ -6,13 +6,15 @@ class _OneOf extends Any {
     constructor(options) {
         super('oneOf');
 
+        this._defaultValue = options[0].defaultValue;
+
         return this.oneOf(options);
     }
 
     oneOf(schemaOptions) {
         // TODO: options must be an array.
 
-        return this.register(
+        return this._register(
             (value) => {
                 const errors = [];
 
@@ -25,7 +27,7 @@ class _OneOf extends Any {
                         return true;
                     }
                 })) {
-                    this.throwValidationFailure(
+                    this._throwValidationFailure(
                         'Aggregate error',
                         { errors }
                     );

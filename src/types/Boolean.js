@@ -6,14 +6,16 @@ class _Boolean extends Any {
     constructor() {
         super('boolean');
 
+        this._defaultValue = false;
+
         return this.isBoolean();
     }
 
     isBoolean() {
-        return this.register(
+        return this._register(
             (value) => {
                 if (typeof value !== 'boolean') {
-                    this.throwValidationFailure('Not a boolean');
+                    this._throwValidationFailure('Not a boolean');
                 }
                 return value;
             },
@@ -32,13 +34,13 @@ class _Boolean extends Any {
                             case 'false': case '0': case 'no': case null:
                                 return false;
                             default :
-                                this.throwValidationFailure('');
+                                this._throwValidationFailure('');
                                 break;
                         }
                         break;
 
                     default:
-                        this.throwValidationFailure('Unsupported type for coersion');
+                        this._throwValidationFailure('Unsupported type for coersion');
                         break;
                 }
             }
@@ -46,10 +48,10 @@ class _Boolean extends Any {
     }
 
     is(expectedValue) {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value !== expectedValue) {
-                    this.throwValidationFailure(`Not ${expectedValue}`);
+                    this._throwValidationFailure(`Not ${expectedValue}`);
                 }
                 return value;
             }

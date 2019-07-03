@@ -6,16 +6,19 @@ class _Object extends Any {
     constructor(contents, options) {
         super('object');
 
+        this._defaultValue = {};
+
         return this.isObject(contents, options);
     }
 
+    // CanCoerce: {} or defaultValue.
     isObject(contents, { allowAdditionalProperties = false } = {}) {
-        return this.register(
+        return this._register(
             (value) => {
                 if (!allowAdditionalProperties) {
                     for (const [propertyName] of Object.entries(value)) {
                         if (!contents[propertyName]) {
-                            this.throwValidationFailure(
+                            this._throwValidationFailure(
                                 'Unexpected property',
                                 { propertyName }
                             );

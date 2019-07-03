@@ -6,14 +6,16 @@ class _Number extends Any {
     constructor() {
         super('number');
 
+        this._defaultValue = 0;
+
         return this.isNumber();
     }
 
     isNumber() {
-        return this.register(
+        return this._register(
             (value) => {
                 if (typeof value !== 'number') {
-                    this.throwValidationFailure('Not a number');
+                    this._throwValidationFailure('Not a number');
                 }
                 return value;
             },
@@ -25,10 +27,10 @@ class _Number extends Any {
     }
 
     min(min) {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value < min) {
-                    this.throwValidationFailure('Too low');
+                    this._throwValidationFailure('Too low');
                 }
 
                 return value;
@@ -37,10 +39,10 @@ class _Number extends Any {
     }
 
     max(max) {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value > max) {
-                    this.throwValidationFailure('Too high');
+                    this._throwValidationFailure('Too high');
                 }
                 return value;
             }
@@ -48,12 +50,12 @@ class _Number extends Any {
     }
 
     range({ min, max }) {
-        return this.register(
+        return this._register(
             (value) => {
                 if (min !== undefined && value < min) {
-                    this.throwValidationFailure('Too low for range');
+                    this._throwValidationFailure('Too low for range');
                 } else if (max !== undefined && value > max) {
-                    this.throwValidationFailure('Too high for range');
+                    this._throwValidationFailure('Too high for range');
                 }
                 return value;
             }
@@ -61,7 +63,7 @@ class _Number extends Any {
     }
 
     ranges(ranges) {
-        return this.register(
+        return this._register(
             (value) => {
                 if (!ranges.some(range => {
                     if (range.min !== undefined && value < range.min) {
@@ -71,7 +73,7 @@ class _Number extends Any {
                     }
                     return true;
                 })) {
-                    this.throwValidationFailure('Not in range');
+                    this._throwValidationFailure('Not in range');
                 }
                 return value;
             }
@@ -79,10 +81,10 @@ class _Number extends Any {
     }
 
     positive() {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value < 0) {
-                    this.throwValidationFailure('Not positive');
+                    this._throwValidationFailure('Not positive');
                 }
                 return value;
             }
@@ -90,10 +92,10 @@ class _Number extends Any {
     }
 
     negative() {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value > 0) {
-                    this.throwValidationFailure('Not negative');
+                    this._throwValidationFailure('Not negative');
                 }
                 return value;
             }
@@ -101,10 +103,10 @@ class _Number extends Any {
     }
 
     nonZero() {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value === 0) {
-                    this.throwValidationFailure('Is zero');
+                    this._throwValidationFailure('Is zero');
                 }
                 return value;
             }
@@ -112,10 +114,10 @@ class _Number extends Any {
     }
 
     even() {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value % 2 !== 0) {
-                    this.throwValidationFailure('Not even');
+                    this._throwValidationFailure('Not even');
                 }
                 return value;
             }
@@ -123,10 +125,10 @@ class _Number extends Any {
     }
 
     odd() {
-        return this.register(
+        return this._register(
             (value) => {
                 if (value % 2 !== 1) {
-                    this.throwValidationFailure('Not odd');
+                    this._throwValidationFailure('Not odd');
                 }
                 return value;
             }

@@ -6,12 +6,20 @@ class Any {
     constructor(type) {
         this.type = type;
 
-        this.validations = [];
-        this.coersions = [];
-        this.required = false;
-        this.defaultValue = undefined;
+        this._validations = [];
+        this._coersions = [];
+        this._required = false;
+        this._defaultValue = undefined;
+        this._coerceValue = false;
     }
 
+    /**
+     * Validates the passed value and returns true if was valid, or false
+     * otherwise.
+     * @param {Any} value The value to validate.
+     * @returns {Boolean} True if the value validates against the schema, otherwise
+     * false.
+     */
     validate(value) {
         try {
             this._validate(value);
@@ -21,10 +29,20 @@ class Any {
         }
     }
 
+    /**
+     * Validates the passed value and throws an error if it is not valid.
+     * @param {Any} value The value to validate.
+     */
     validateNoCatch(value) {
         this._validate(value);
     }
 
+    /**
+     * Validates the passed value and return undefined, or the reason that it
+     * fails validation.
+     * @param {Any} value The value to validate.
+     * @returns {undefined|Error} Returns an Error if it fails validation.
+     */
     validateWithErrors(value) {
         try {
             this._validate(value);
@@ -33,11 +51,19 @@ class Any {
         }
     }
 
+    /**
+     * Validates the passed value and (if necessary) coerces it into being valid,
+     * by any appropriate means, this might mean clamping a number or removing
+     * elements from an array - if all else fails then it will replace the value
+     * with its defaultValue.
+     * @param {Any} value The value to coerce (mutates the original).
+     * @returns {Any} The coerce value.
+     */
     coerce(value) {
         try {
             return this._coerce(value);
         } catch (error) {
-            return this.defaultValue;
+            return this._defaultValue;
         }
     }
 
@@ -46,7 +72,7 @@ class Any {
     }
 
     _validate(value) {
-        const validationStack = [...this.validations];
+        const validationStack = [...this._validations];
         validationStack.reverse();
 
         function recurseValidations(value) {
@@ -60,10 +86,10 @@ class Any {
         }
 
         if (value === undefined || value === null) {
-            if (this.required) {
-                this.throwValidationFailure('Required value not specified');
+            if (this._required) {
+                this._throwValidationFailure('Required value not specified');
             } else {
-                return true;
+                return value;
             }
         }
 
@@ -71,7 +97,7 @@ class Any {
     }
 
     _coerce(value) {
-        const coersionStack = [...this.coersions];
+        const coersionStack = [...this._coersions];
         coersionStack.reverse();
 
         function recurseCoersions(value) {
@@ -85,33 +111,38 @@ class Any {
         }
 
         if (value === undefined || value === null) {
-            if (this.required) {
-                return this.defaultValue || false;
+            if (this._required) {
+                return this._defaultValue || false;
             }
         }
 
         return recurseCoersions(value);
     }
 
-    register(validation, coersion) {
-        this.validations.push(validation);
-        this.coersions.push(coersion || validation);
+    _register(validation, coersion) {
+        this._validations.push(validation);
+        this._coersions.push(coersion || validation);
 
         return this;
     }
 
     isOptional() {
-        this.required = false;
+        this._required = false;
         return this;
     }
 
     isRequired() {
-        this.required = true;
+        this._required = true;
         return this;
     }
 
     default(defaultValue) {
-        this.defaultValue = defaultValue;
+        this._defaultValue = defaultValue;
+        return this;
+    }
+
+    coerceValue() {
+        this._coerceValue = true;
         return this;
     }
 
@@ -119,10 +150,10 @@ class Any {
     }
 
     cannotCoerse() {
-        this.throwValidationFailure('Unable to coerse value with this type');
+        this._throwValidationFailure('Unable to coerse value with this type');
     }
 
-    throwValidationFailure(reason, additionalProperties) {
+    _throwValidationFailure(reason, additionalProperties) {
         throw new ValidationError(reason, {
             type: this.type,
             ...additionalProperties
