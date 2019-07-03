@@ -85,7 +85,9 @@ class Any {
         }
 
         if (value === undefined || value === null) {
-            return this.defaultValue || false;
+            if (this.required) {
+                return this.defaultValue || false;
+            }
         }
 
         return recurseCoersions(value);

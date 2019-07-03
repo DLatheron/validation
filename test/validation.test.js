@@ -121,20 +121,20 @@ describe('validation', () => {
             .Object({
                 name: Validate.Object({
                     first: Validate.String().notEmpty(),
-                    last: Validate.String().notEmpty()
+                    last: Validate.String().notEmpty().isRequired()
                 })
             });
 
         expect(schema.validateWithErrors(
             { name: { first: 'Dave' } }
         )).toMatchObject(
-            { message: 'Not a string', propertyName: 'name.last' }
+            { message: 'Required value not specified', propertyName: 'name.last' }
         );
     });
 
     it('should evaluate arrays', () => {
         const schema = Validate
-            .Array(Validate.Object({ id: Validate.Number().positive() }))
+            .Array(Validate.Object({ id: Validate.Number().positive().isRequired() }))
             .notEmpty()
             .maxLength(4);
 
@@ -145,7 +145,7 @@ describe('validation', () => {
         expect(schema.validate([{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }])).toStrictEqual(false);
     });
 
-    it('should coerse arrays', () => {
+    it('should coerce arrays', () => {
         const schema = Validate
             .Array()
             .notEmpty()
@@ -192,10 +192,10 @@ describe('validation', () => {
         expect(schema.validate(undefined)).toBe(false);
     });
 
-    it.only('should use defaultValue if coersion fails', () => {
+    it('should use defaultValue if coersion fails', () => {
         const schema = Validate
             .Number()
-            .isOptional()
+            .isRequired()
             .default(18);
 
         expect(schema.coerce(23)).toBe(23);

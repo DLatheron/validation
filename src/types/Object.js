@@ -31,7 +31,7 @@ class _Object extends Any {
                         throw error;
                     }
                 }
-                return true;
+                return value;
             }
         );
     }
