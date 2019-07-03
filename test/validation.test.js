@@ -166,6 +166,40 @@ describe('validation', () => {
         expect(schema.coerce('yes')).toBe(true);
 
         expect(schema.validate(false)).toBe(false);
-        expect(schema.coerce('false')).toBe(false);
+        expect(schema.coerce('false')).toBe(undefined);
+    });
+
+    it('should validate optional values', () => {
+        const schema = Validate
+            .Boolean()
+            .isOptional();
+
+        expect(schema.validate(true)).toBe(true);
+        expect(schema.validate(false)).toBe(true);
+        expect(schema.validate(null)).toBe(true);
+        expect(schema.validate(undefined)).toBe(true);
+    });
+
+    it('should validate required values', () => {
+        const schema = Validate
+            .Boolean()
+            .isRequired();
+
+        expect(schema.validate(true)).toBe(true);
+        expect(schema.validate(false)).toBe(true);
+
+        expect(schema.validate(null)).toBe(false);
+        expect(schema.validate(undefined)).toBe(false);
+    });
+
+    it.only('should use defaultValue if coersion fails', () => {
+        const schema = Validate
+            .Number()
+            .isOptional()
+            .default(18);
+
+        expect(schema.coerce(23)).toBe(23);
+        expect(schema.coerce('37')).toBe(37);
+        expect(schema.coerce(undefined)).toBe(18);
     });
 });

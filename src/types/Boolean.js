@@ -32,8 +32,10 @@ class _Boolean extends Any {
                             case 'false': case '0': case 'no': case null:
                                 return false;
                             default :
-                                return Boolean(coerce).valueOf();
+                                this.throwValidationFailure('');
+                                break;
                         }
+                        break;
 
                     default:
                         this.throwValidationFailure('Unsupported type for coersion');

@@ -8,6 +8,8 @@ class Any {
 
         this.validations = [];
         this.coersions = [];
+        this.required = false;
+        this.defaultValue = undefined;
     }
 
     validate(value) {
@@ -35,7 +37,7 @@ class Any {
         try {
             return this._coerce(value);
         } catch (error) {
-            return false;
+            return this.defaultValue;
         }
     }
 
@@ -57,6 +59,14 @@ class Any {
             return value;
         }
 
+        if (value === undefined || value === null) {
+            if (this.required) {
+                this.throwValidationFailure('Required value not specified');
+            } else {
+                return true;
+            }
+        }
+
         return recurseValidations(value);
     }
 
@@ -74,6 +84,10 @@ class Any {
             return value;
         }
 
+        if (value === undefined || value === null) {
+            return this.defaultValue || false;
+        }
+
         return recurseCoersions(value);
     }
 
@@ -81,6 +95,21 @@ class Any {
         this.validations.push(validation);
         this.coersions.push(coersion || validation);
 
+        return this;
+    }
+
+    isOptional() {
+        this.required = false;
+        return this;
+    }
+
+    isRequired() {
+        this.required = true;
+        return this;
+    }
+
+    default(defaultValue) {
+        this.defaultValue = defaultValue;
         return this;
     }
 
