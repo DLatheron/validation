@@ -30,9 +30,7 @@ describe('String', () => {
     describe('isString', () => {
         describe('validation', () => {
             it('should continue if passed a valid string', () => {
-                const str = 'a string';
-
-                _string.validateNoCatch(str);
+                _string.validateNoCatch('a valid string');
             });
 
             it('should throw if the value passed is not a valid string', () => {
@@ -57,6 +55,28 @@ describe('String', () => {
 
             it('should convert an object to a stirng', () => {
                 expect(_string.coerce({ name: 'Bill' })).toEqual('{"name":"Bill"}');
+            });
+        });
+    });
+
+    describe('notEmpty', () => {
+        beforeEach(() => {
+            _string.notEmpty();
+        });
+
+        describe('validate', () => {
+            it('should continue if passed a non-empty string', () => {
+                _string.validateNoCatch('not empty');
+            });
+
+            it('should throw if the valie passed is an empty string', () => {
+                expect(() => _string.validateNoCatch('')).toThrow(
+                    new ValidationError(
+                        'Cannot be empty', {
+                            type: 'string'
+                        }
+                    )
+                );
             });
         });
     });
