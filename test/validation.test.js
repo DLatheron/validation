@@ -243,3 +243,50 @@ describe('validation', () => {
         }])).toBe(false);
     });
 });
+
+// IDEA:
+// - Can we unify validation and coersion?
+//   - It will mean that we add mutation to the original value... (could deepClone before hand???)
+//   - Have a default value per type... that sets the default and then proceeds to validate... so:
+
+/*
+
+const schema = Validate
+    .Array(
+        Validate.Object({
+            name: Validate.Object({
+                first: Validate.String(),
+                last: Validate.String()
+            }),
+            age: Validate.Number().min(18).max(99),
+            occupation: Validate.String().notEmpty()
+        })
+            .isRequired()
+    )
+    .notEmpty()
+    .maxLength(4)
+    .isRequired();
+
+If it fails validation then we should just throw an error.
+In the case of coersion that error is caught at the Validate.xxxx level and
+turned into a valid value.
+
+Validation then continues until it can't coerce or it completes...
+
+So:
+
+name: Validation.String()[.isOptional()]                // Must be a string, null or undefined.
+name: Validation.String().isRequired()                  // Must be a string.
+name: Validation.String().default('a')[.isOptional()]   // Optional, but replaced with 'a' if not rovided
+name: Validation.String().default('a').isRequired()     // Makes no sense.
+name: Validation.String().default(defaultValue = '')    // Sets default to default for a string (empty string).
+
+That works fine - but how do we coerce a range?
+- Have different operations?
+  e.g.
+  - range({ min, max }) and clampRange({ min, max })?
+  - positive() and makePositive()?
+  - generically transform(value => value)?
+  -
+
+*/
