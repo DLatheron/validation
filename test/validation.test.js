@@ -192,7 +192,7 @@ describe('validation', () => {
         expect(schema.validate(undefined)).toBe(false);
     });
 
-    it('should use defaultValue if coersion fails', () => {
+    it('should use the value specified as a default if coersion fails', () => {
         const schema = Validate
             .Number()
             .isRequired()
@@ -201,5 +201,45 @@ describe('validation', () => {
         expect(schema.coerce(23)).toBe(23);
         expect(schema.coerce('37')).toBe(37);
         expect(schema.coerce(undefined)).toBe(18);
+    });
+
+    it('should work with complex schema', () => {
+        const schema = Validate
+            .Array(
+                Validate.Object({
+                    name: Validate.Object({
+                        first: Validate.String(),
+                        last: Validate.String()
+                    }),
+                    age: Validate.Number().min(18).max(99),
+                    occupation: Validate.String().notEmpty()
+                })
+                    .isRequired()
+            )
+            .notEmpty()
+            .maxLength(4)
+            .isRequired();
+
+        expect(schema.validate([{
+            name: {
+                first: 'David',
+                last: 'Jones'
+            },
+            age: 57,
+            occupation: 'Computer Programmer'
+        }])).toBe(true);
+
+        expect(schema.validate([{
+            name: { first: 'David', last: 'Jones' },
+            age: 57,
+            occupation: ''
+        }])).toBe(false);
+        expect(schema.validate([{
+            name: {
+                first: 'David', last: 'Jones'
+            },
+            age: 17,
+            occupation: 'Computer Programmer'
+        }])).toBe(false);
     });
 });

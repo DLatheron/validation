@@ -4,7 +4,7 @@ const ValidationError = require('../ValidationError');
 
 class Any {
     constructor(type) {
-        this.type = type;
+        this._type = type;
 
         this._validations = [];
         this._coersions = [];
@@ -146,16 +146,16 @@ class Any {
         return this;
     }
 
-    noCoersion() {
-    }
+    // noCoersion() {
+    // }
 
-    cannotCoerse() {
-        this._throwValidationFailure('Unable to coerse value with this type');
-    }
+    // cannotCoerse() {
+    //     this._throwValidationFailure('Unable to coerse value with this type');
+    // }
 
     _throwValidationFailure(reason, additionalProperties) {
         throw new ValidationError(reason, {
-            type: this.type,
+            type: this._type,
             ...additionalProperties
         });
     }

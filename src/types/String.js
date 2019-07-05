@@ -20,8 +20,17 @@ class _String extends Any {
                 return value;
             },
             (coerce) => {
-                // eslint-disable-next-line no-new-wrappers
-                return new String(coerce).valueOf();
+                if (typeof coerce === 'object') {
+                    try {
+                        return JSON.stringify(coerce);
+                    } catch (error) {
+                        this._throwValidationFailure('Unable to coerce value to a JSON string');
+                    }
+                } else if (typeof coerce.toString === 'function') {
+                    return coerce.toString();
+                } else {
+                    this._throwValidationFailure('Unable to coerce value to a string');
+                }
             }
         );
     }
@@ -55,6 +64,28 @@ class _String extends Any {
                     this._throwValidationFailure('Too long');
                 }
                 return value;
+            }
+        );
+    }
+
+    alpha() {
+        return this._register(
+            (value) => {
+                const regex = /^[a-zA-Z]$/;
+                if (!value.match(regex)) {
+                    this._throwValidationFailure('Contains non-alpha characters');
+                }
+            }
+        );
+    }
+
+    alphanum() {
+        return this._register(
+            (value) => {
+                const regex = /^[a-zA-Z0-9]$/;
+                if (!value.match(regex)) {
+                    this._throwValidationFailure('Contains non-alphanumeric characters');
+                }
             }
         );
     }
