@@ -1,6 +1,7 @@
 'use strict';
 
 const Validate = require('../src/validation');
+const ValidationError = require('../src/ValidationError');
 
 // TODO: How do we get the list of errors back???
 // - Get back a list of properties that fail (depth-wise);
@@ -12,15 +13,24 @@ describe('validation', () => {
             .min(18)
             .max(99);
 
-        expect(schema.validate(18)).toStrictEqual(true);
-        expect(schema.validate(50)).toStrictEqual(true);
-        expect(schema.validate(99)).toStrictEqual(true);
+        expect(schema.validate(18)).toStrictEqual(18);
+        expect(schema.validate(50)).toStrictEqual(50);
+        expect(schema.validate(99)).toStrictEqual(99);
 
-        expect(schema.validate(17)).toStrictEqual(false);
-        expect(schema.validateWithErrors(17)).toMatchObject({ message: 'Too low' });
-
-        expect(schema.validate(100)).toStrictEqual(false);
-        expect(schema.validateWithErrors(100)).toMatchObject({ message: 'Too high' });
+        expect(() => schema.validate(17)).toThrow(
+            new ValidationError(
+                'Too low', {
+                    type: 'number'
+                }
+            )
+        );
+        expect(() => schema.validate(100)).toThrow(
+            new ValidationError(
+                'Too high', {
+                    type: 'number'
+                }
+            )
+        );
     });
 
     it('should allow the use of complex ranges', () => {
@@ -45,7 +55,7 @@ describe('validation', () => {
         expect(schema.validate(39)).toStrictEqual(false);
     });
 
-    it('should coerce string into numbers', () => {
+    it.skip('should coerce string into numbers', () => {
         const schema = Validate
             .Number()
             .positive()
@@ -145,7 +155,7 @@ describe('validation', () => {
         expect(schema.validate([{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }])).toStrictEqual(false);
     });
 
-    it('should coerce arrays', () => {
+    it.skip('should coerce arrays', () => {
         const schema = Validate
             .Array()
             .notEmpty()
@@ -154,7 +164,7 @@ describe('validation', () => {
         expect(schema.coerce()).toStrictEqual([]);
     });
 
-    it('should value booleans', () => {
+    it.skip('should value booleans', () => {
         const schema = Validate
             .Boolean()
             .is(true);
@@ -192,7 +202,7 @@ describe('validation', () => {
         expect(schema.validate(undefined)).toBe(false);
     });
 
-    it('should use the value specified as a default if coersion fails', () => {
+    it.skip('should use the value specified as a default if coersion fails', () => {
         const schema = Validate
             .Number()
             .isRequired()
