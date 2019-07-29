@@ -30,7 +30,7 @@ class _Number extends Any {
         return this._register(
             (value) => {
                 if (value < min) {
-                    this._throwValidationFailure('Too low');
+                    this._throwValidationFailure('tooLow');
                 }
 
                 return value;

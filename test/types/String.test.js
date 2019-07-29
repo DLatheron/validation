@@ -1,7 +1,7 @@
 'use strict';
 
 const _String = require('../../src/types/String');
-const ValidationError = require('../../src/ValidationError');
+const { ValidationError } = require('../../src/ValidationError');
 
 describe('String', () => {
     let _string;

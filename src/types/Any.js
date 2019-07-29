@@ -1,6 +1,6 @@
 'use strict';
 
-const ValidationError = require('../ValidationError');
+const { ValidationError } = require('../ValidationError');
 
 class Any {
     constructor(type) {
