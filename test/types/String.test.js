@@ -1,7 +1,7 @@
 'use strict';
 
 const _String = require('../../src/types/String');
-const { ValidationError } = require('../../src/ValidationError');
+const { ValidationError, ValidationErrorTypes } = require('../../src/ValidationError');
 
 describe('String', () => {
     let _string;
@@ -36,7 +36,7 @@ describe('String', () => {
             it('should throw if the value passed is not a valid string', () => {
                 expect(() => _string.validate(12)).toThrow(
                     new ValidationError(
-                        'Not a string', {
+                        ValidationErrorTypes.notAString, {
                             type: 'string'
                         }
                     )
@@ -72,7 +72,7 @@ describe('String', () => {
             it('should throw if the valie passed is an empty string', () => {
                 expect(() => _string.validate('')).toThrow(
                     new ValidationError(
-                        'Cannot be empty', {
+                        ValidationErrorTypes.cannotBeEmpty, {
                             type: 'string'
                         }
                     )

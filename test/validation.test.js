@@ -1,7 +1,7 @@
 'use strict';
 
 const Validate = require('../src/validation');
-const { ValidationError } = require('../src/ValidationError');
+const { ValidationError, ValidationErrorTypes } = require('../src/ValidationError');
 
 // TODO: How do we get the list of errors back???
 // - Get back a list of properties that fail (depth-wise);
@@ -19,14 +19,14 @@ describe('validation', () => {
 
         expect(() => schema.validate(17)).toThrow(
             new ValidationError(
-                'Too low', {
+                ValidationErrorTypes.tooLow, {
                     type: 'number'
                 }
             )
         );
         expect(() => schema.validate(100)).toThrow(
             new ValidationError(
-                'Too high', {
+                ValidationErrorTypes.tooHigh, {
                     type: 'number'
                 }
             )
@@ -49,42 +49,42 @@ describe('validation', () => {
 
         expect(() => schema.validate(11)).toThrow(
             new ValidationError(
-                'Not in range', {
+                ValidationErrorTypes.notInRange, {
                     type: 'number'
                 }
             )
         );
         expect(() => schema.validate(15)).toThrow(
             new ValidationError(
-                'Not in range', {
+                ValidationErrorTypes.notInRange, {
                     type: 'number'
                 }
             )
         );
         expect(() => schema.validate(19)).toThrow(
             new ValidationError(
-                'Not in range', {
+                ValidationErrorTypes.notInRange, {
                     type: 'number'
                 }
             )
         );
         expect(() => schema.validate(31)).toThrow(
             new ValidationError(
-                'Not in range', {
+                ValidationErrorTypes.notInRange, {
                     type: 'number'
                 }
             )
         );
         expect(() => schema.validate(35)).toThrow(
             new ValidationError(
-                'Not in range', {
+                ValidationErrorTypes.notInRange, {
                     type: 'number'
                 }
             )
         );
         expect(() => schema.validate(39)).toThrow(
             new ValidationError(
-                'Not in range', {
+                ValidationErrorTypes.notInRange, {
                     type: 'number'
                 }
             )
@@ -110,14 +110,14 @@ describe('validation', () => {
 
         expect(() => schema.validate('')).toThrow(
             new ValidationError(
-                'Cannot be empty', {
+                ValidationErrorTypes.cannotBeEmpty, {
                     type: 'string'
                 }
             )
         );
         expect(() => schema.validate('01234567890123456789+')).toThrow(
             new ValidationError(
-                'Too long', {
+                ValidationErrorTypes.tooLong, {
                     type: 'string'
                 }
             )
@@ -136,21 +136,21 @@ describe('validation', () => {
 
         expect(() => schema.validate('')).toThrow(
             new ValidationError(
-                'Aggregate error', {
+                ValidationErrorTypes.aggregateError, {
                     type: 'string'
                 }
             )
         );
         expect(() => schema.validate(11)).toThrow(
             new ValidationError(
-                'Aggregate error', {
+                ValidationErrorTypes.aggregateError, {
                     type: 'number'
                 }
             )
         );
         expect(() => schema.validate({})).toThrow(
             new ValidationError(
-                'Aggregate error', {
+                ValidationErrorTypes.aggregateError, {
                     type: 'string'
                 }
             )

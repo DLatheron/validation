@@ -1,6 +1,7 @@
 'use strict';
 
 const Any = require('./Any');
+const { ValidationErrorTypes } = require('../ValidationError');
 
 class _Boolean extends Any {
     constructor() {
@@ -15,7 +16,7 @@ class _Boolean extends Any {
         return this._register(
             (value) => {
                 if (typeof value !== 'boolean') {
-                    this._throwValidationFailure('Not a boolean');
+                    this._throwValidationFailure(ValidationErrorTypes.notABoolean);
                 }
                 return value;
             },
@@ -34,13 +35,13 @@ class _Boolean extends Any {
                             case 'false': case '0': case 'no': case null:
                                 return false;
                             default :
-                                this._throwValidationFailure('');
+                                this._throwValidationFailure(ValidationErrorTypes.cannotConvertStringToBoolean);
                                 break;
                         }
                         break;
 
                     default:
-                        this._throwValidationFailure('Unsupported type for coersion');
+                        this._throwValidationFailure(ValidationErrorTypes.unsupportedTypeForConversion);
                         break;
                 }
             }
@@ -51,7 +52,7 @@ class _Boolean extends Any {
         return this._register(
             (value) => {
                 if (value !== expectedValue) {
-                    this._throwValidationFailure(`Not ${expectedValue}`);
+                    this._throwValidationFailure(ValidationErrorTypes.notExpectedValue);
                 }
                 return value;
             }

@@ -1,6 +1,7 @@
 'use strict';
 
 const Any = require('./Any');
+const { ValidationErrorTypes } = require('../ValidationError');
 
 class _Array extends Any {
     constructor(schema) {
@@ -16,7 +17,7 @@ class _Array extends Any {
         return this._register(
             (value, next) => {
                 if (!Array.isArray(value)) {
-                    this._throwValidationFailure('Not an array');
+                    this._throwValidationFailure(ValidationErrorTypes.notAnArray);
                 }
 
                 value = next(value);
@@ -48,7 +49,7 @@ class _Array extends Any {
         return this._register(
             (value) => {
                 if (value.length === 0) {
-                    this._throwValidationFailure('Cannot be empty');
+                    this._throwValidationFailure(ValidationErrorTypes.cannotBeEmpty);
                 }
                 return value;
             },
@@ -63,7 +64,7 @@ class _Array extends Any {
         return this._register(
             (value) => {
                 if (value.length < minLength) {
-                    this._throwValidationFailure('Too short');
+                    this._throwValidationFailure(ValidationErrorTypes.tooShort);
                 }
                 return value;
             }
@@ -75,7 +76,7 @@ class _Array extends Any {
         return this._register(
             (value) => {
                 if (value.length > maxLength) {
-                    this._throwValidationFailure('Too long');
+                    this._throwValidationFailure(ValidationErrorTypes.tooLong);
                 }
                 return value;
             }

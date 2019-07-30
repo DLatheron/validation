@@ -1,6 +1,6 @@
 'use strict';
 
-const { ValidationError } = require('../ValidationError');
+const { ValidationError, ValidationErrorTypes } = require('../ValidationError');
 
 class Any {
     constructor(type) {
@@ -39,7 +39,7 @@ class Any {
 
         if (value === undefined || value === null) {
             if (this._required) {
-                this._throwValidationFailure('Required value not specified');
+                this._throwValidationFailure(ValidationErrorTypes.required);
             } else {
                 return value;
             }

@@ -1,6 +1,7 @@
 'use strict';
 
 const Any = require('./Any');
+const { ValidationErrorTypes } = require('../ValidationError');
 
 class _OneOf extends Any {
     constructor(options) {
@@ -28,7 +29,7 @@ class _OneOf extends Any {
                     }
                 })) {
                     this._throwValidationFailure(
-                        'Aggregate error',
+                        ValidationErrorTypes.aggregateError,
                         { errors }
                     );
                 }

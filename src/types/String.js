@@ -1,6 +1,7 @@
 'use strict';
 
 const Any = require('./Any');
+const { ValidationErrorTypes } = require('../ValidationError');
 
 class _String extends Any {
     constructor() {
@@ -15,7 +16,7 @@ class _String extends Any {
         return this._register(
             (value) => {
                 if (typeof value !== 'string') {
-                    this._throwValidationFailure('Not a string');
+                    this._throwValidationFailure(ValidationErrorTypes.notAString);
                 }
                 return value;
             },
@@ -24,12 +25,12 @@ class _String extends Any {
                     try {
                         return JSON.stringify(coerce);
                     } catch (error) {
-                        this._throwValidationFailure('Unable to coerce value to a JSON string');
+                        this._throwValidationFailure(ValidationErrorTypes.cannotConvertObjectToJSON);
                     }
                 } else if (typeof coerce.toString === 'function') {
                     return coerce.toString();
                 } else {
-                    this._throwValidationFailure('Unable to coerce value to a string');
+                    this._throwValidationFailure(ValidationErrorTypes.cannotConvertToString);
                 }
             }
         );
@@ -39,7 +40,7 @@ class _String extends Any {
         return this._register(
             (value) => {
                 if (value.length === 0) {
-                    this._throwValidationFailure('Cannot be empty');
+                    this._throwValidationFailure(ValidationErrorTypes.cannotBeEmpty);
                 }
                 return value;
             }
@@ -50,7 +51,7 @@ class _String extends Any {
         return this._register(
             (value) => {
                 if (value.length < minLength) {
-                    this._throwValidationFailure('Too short');
+                    this._throwValidationFailure(ValidationErrorTypes.tooShort);
                 }
                 return value;
             }
@@ -61,7 +62,7 @@ class _String extends Any {
         return this._register(
             (value) => {
                 if (value.length > maxLength) {
-                    this._throwValidationFailure('Too long');
+                    this._throwValidationFailure(ValidationErrorTypes.tooLong);
                 }
                 return value;
             }
@@ -73,7 +74,7 @@ class _String extends Any {
             (value) => {
                 const regex = /^[a-zA-Z]$/;
                 if (!value.match(regex)) {
-                    this._throwValidationFailure('Contains non-alpha characters');
+                    this._throwValidationFailure(ValidationErrorTypes.containsNonAlphaCharacters);
                 }
             }
         );
@@ -84,7 +85,7 @@ class _String extends Any {
             (value) => {
                 const regex = /^[a-zA-Z0-9]$/;
                 if (!value.match(regex)) {
-                    this._throwValidationFailure('Contains non-alphanumeric characters');
+                    this._throwValidationFailure(ValidationErrorTypes.containsNonAlphaNumericCharacters);
                 }
             }
         );
