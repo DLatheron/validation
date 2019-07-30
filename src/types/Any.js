@@ -1,6 +1,7 @@
 'use strict';
 
 const { ValidationError } = require('../ValidationError');
+const { merge } = require('lodash');
 
 class Any {
     constructor(type) {
@@ -10,6 +11,7 @@ class Any {
         this._required = false;
         this._defaultValue = undefined;
         this._coerceValue = false;
+        this._coersionOptions = {};
     }
 
     /**
@@ -66,6 +68,12 @@ class Any {
 
     default(defaultValue) {
         this._defaultValue = defaultValue;
+        return this;
+    }
+
+    coerce(options) {
+        this._coerceValue = true;
+        this._coersionOptions = merge(this._coersionOptions, options);
         return this;
     }
 

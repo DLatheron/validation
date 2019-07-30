@@ -2,7 +2,7 @@
 
 const _Number = require('../../src/types/Number');
 
-describe('Number', () => {
+describe.skip('Number', () => {
     beforeEach(() => {
         jest.spyOn(_Number.prototype, 'isNumber');
         jest.spyOn(_Number.prototype, 'toNumber');
@@ -39,16 +39,42 @@ describe('Number', () => {
     });
 
     describe('isNumber', () => {
-        describe('validation', () => {
-            it('should continue if passed a valid number', () => {
-                const _number = new _Number();
-                _number.validate(1234);
-            });
+        let _number;
 
-            it('should throw if the value passed is not a valid number', () => {
-                const _number = new _Number();
-                expect(() => _number.validate('422')).toThrow('notANumber');
-            });
+        beforeEach(() => {
+            _number = new _Number();
+        });
+
+        it('should continue if passed a valid number', () => {
+            _number.validate(1234);
+        });
+
+        it('should throw if the value passed is not a valid number', () => {
+            expect(() => _number.validate('422')).toThrow('notANumber');
+        });
+    });
+
+    describe('toNumber', () => {
+        let _number;
+
+        beforeEach(() => {
+            _number = new _Number(false);
+        });
+
+        it('should leave a number value untouched', () => {
+            expect(_number.validate(8752)).toBe(8752);
+        });
+
+        it('should convert a string into a number', () => {
+            expect(_number.validate('2984.621')).toBe(2984.621);
+        });
+
+        it('should throw an error if the string is empty', () => {
+            expect(() => _number.validate('')).toThrow('notANumber');
+        });
+
+        it('should throw an error if the string is not a number', () => {
+            expect(() => _number.validate('not a number')).toThrow('notANumber');
         });
     });
 });

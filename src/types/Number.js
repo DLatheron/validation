@@ -1,29 +1,50 @@
 'use strict';
 
 const Any = require('./Any');
+const { isFinite } = require('lodash');
 
 // TODO:
 // - Support for conversion from a particular base.
 
 class _Number extends Any {
-    constructor(strict = true) {
+    constructor() {
         super('number');
 
         this._defaultValue = 0;
 
-        return (strict
-            ? this.isNumber()
-            : this.toNumber()
-        );
+        return this.isNumber();
     }
 
     isNumber() {
         return this._register(
             value => {
-                if (typeof value !== 'number') {
-                    this._throwValidationFailure('notANumber');
+                if (!this._coerceValue) {
+                    if (typeof value !== 'number') {
+                        this._throwValidationFailure('notANumber');
+                    }
+                    return value;
+                } else {
+                    switch (typeof value) {
+                        case 'number':
+                            return value;
+
+                        case 'string':
+                            if (value === '') {
+                                return this._throwValidationFailure('notANumber');
+                            }
+                            const valueAsNumber = Number(value).valueOf();
+                            if (!isFinite(valueAsNumber)) {
+                                return this._throwValidationFailure('notANumber');
+                            }
+                            return valueAsNumber;
+
+                        case 'boolean':
+                            return value ? 1 : 0;
+
+                        default:
+                            this._throwValidationFailure('cannotConvertToNumber');
+                    }
                 }
-                return value;
             }
         );
     }
@@ -36,7 +57,14 @@ class _Number extends Any {
                         return value;
 
                     case 'string':
-                        return Number(value).valueOf();
+                        if (value === '') {
+                            return this._throwValidationFailure('notANumber');
+                        }
+                        const valueAsNumber = Number(value).valueOf();
+                        if (!isFinite(valueAsNumber)) {
+                            return this._throwValidationFailure('notANumber');
+                        }
+                        return valueAsNumber;
 
                     case 'boolean':
                         return value ? 1 : 0;

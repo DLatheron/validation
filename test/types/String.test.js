@@ -2,7 +2,7 @@
 
 const _String = require('../../src/types/String');
 
-describe('String', () => {
+describe.skip('String', () => {
     beforeEach(() => {
         jest.spyOn(_String.prototype, 'isString');
         jest.spyOn(_String.prototype, 'toString');

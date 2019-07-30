@@ -42,25 +42,28 @@ describe('validation', () => {
         expect(() => schema.validate(39)).toThrow('notInRange');
     });
 
-    it.only('should coerce string into numbers', () => {
+    it('should coerce a string into numbers', () => {
         const schema = Validate
-            .Number(false)
+            .Number()
             .positive()
-            .even();
+            .even()
+            .coerce();
 
         expect(schema.validate('10')).toStrictEqual(10);
     });
 
     it('should coerce objects into strings', () => {
         const schema = Validate
-            .String(false);
+            .String()
+            .coerce();
 
         expect(schema.validate({ bool: true })).toStrictEqual('{"bool":true}');
     });
 
     it('should coerce objects into strings', () => {
         const schema = Validate
-            .String(false, { json: { indent: 4 } });
+            .String()
+            .coerce({ json: { indent: 4 } });
 
         expect(schema.validate({ bool: true })).toStrictEqual('{\n    "bool": true\n}');
     });
@@ -116,7 +119,15 @@ describe('validation', () => {
                 age: Validate.Number().min(18)
             }, { allowAdditionalProperties: true });
 
-        expect(schema.validate({ name: 'Hi', age: 23, invalidProperty: false })).toStrictEqual(true);
+        expect(schema.validate({
+            name: 'Hi',
+            age: 23,
+            invalidProperty: false
+        })).toStrictEqual({
+            name: 'Hi',
+            age: 23,
+            invalidProperty: false
+        });
     });
 
     it('should report the name of the property that fails', () => {
@@ -128,11 +139,7 @@ describe('validation', () => {
                 })
             });
 
-        expect(schema.validateWithErrors(
-            { name: { first: 'Dave' } }
-        )).toMatchObject(
-            { message: 'Required value not specified', propertyName: 'name.last' }
-        );
+        expect(() => schema.validate({ name: { first: 'Dave' } })).toThrow('required');
     });
 
     it('should evaluate arrays', () => {
@@ -141,11 +148,17 @@ describe('validation', () => {
             .notEmpty()
             .maxLength(4);
 
-        expect(schema.validate([{ id: 1 }])).toStrictEqual(true);
+        expect(schema.validate([{ id: 1 }])).toStrictEqual([{ id: 1 }]);
 
-        expect(schema.validate([])).toStrictEqual(false);
-        expect(schema.validate([{}])).toStrictEqual(false);
-        expect(schema.validate([{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }])).toStrictEqual(false);
+        expect(() => schema.validate([])).toThrow('cannotBeEmpty');
+        expect(() => schema.validate([{}])).toThrow('required');
+        expect(() => schema.validate([
+            { id: 1 },
+            { id: 2 },
+            { id: 3 },
+            { id: 4 },
+            { id: 5 }
+        ])).toThrow('tooLong');
     });
 
     it.skip('should coerce arrays', () => {
@@ -178,9 +191,9 @@ describe('validation', () => {
             .isOptional();
 
         expect(schema.validate(true)).toBe(true);
-        expect(schema.validate(false)).toBe(true);
-        expect(schema.validate(null)).toBe(true);
-        expect(schema.validate(undefined)).toBe(true);
+        expect(schema.validate(false)).toBe(false);
+        expect(schema.validate(null)).toBe(null);
+        expect(schema.validate(undefined)).toBe(undefined);
     });
 
     it('should validate required values', () => {
@@ -189,10 +202,10 @@ describe('validation', () => {
             .isRequired();
 
         expect(schema.validate(true)).toBe(true);
-        expect(schema.validate(false)).toBe(true);
+        expect(schema.validate(false)).toBe(false);
 
-        expect(schema.validate(null)).toBe(false);
-        expect(schema.validate(undefined)).toBe(false);
+        expect(() => schema.validate(null)).toThrow('required');
+        expect(() => schema.validate(undefined)).toThrow('required');
     });
 
     it.skip('should use the value specified as a default if coersion fails', () => {
@@ -230,20 +243,27 @@ describe('validation', () => {
             },
             age: 57,
             occupation: 'Computer Programmer'
-        }])).toBe(true);
+        }])).toStrictEqual([{
+            name: {
+                first: 'David',
+                last: 'Jones'
+            },
+            age: 57,
+            occupation: 'Computer Programmer'
+        }]);
 
-        expect(schema.validate([{
+        expect(() => schema.validate([{
             name: { first: 'David', last: 'Jones' },
             age: 57,
             occupation: ''
-        }])).toBe(false);
-        expect(schema.validate([{
+        }])).toThrow('cannotBeEmpty');
+        expect(() => schema.validate([{
             name: {
                 first: 'David', last: 'Jones'
             },
             age: 17,
             occupation: 'Computer Programmer'
-        }])).toBe(false);
+        }])).toThrow('tooLow');
     });
 });
 

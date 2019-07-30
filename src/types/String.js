@@ -1,60 +1,50 @@
 'use strict';
 
 const Any = require('./Any');
-const { merge } = require('lodash');
-
-const defaultOptions = {
-    json: {
-        indent: 0
-    }
-};
 
 class _String extends Any {
-    constructor(strict = true, options = {}) {
+    constructor() {
         super('string');
 
         this._defaultValue = '';
-        this._options = merge({}, defaultOptions, options);
+        this._coersionOptions = {
+            json: {
+                indent: 0
+            }
+        };
 
-        return (strict
-            ? this.isString()
-            : this.toString()
-        );
+        return this.isString();
     }
 
     isString() {
         return this._register(
             value => {
-                if (typeof value !== 'string') {
-                    this._throwValidationFailure('notAString');
-                }
-                return value;
-            }
-        );
-    }
+                if (!this._coerceValue) {
+                    if (typeof value !== 'string') {
+                        this._throwValidationFailure('notAString');
+                    }
+                    return value;
+                } else {
+                    switch (typeof value) {
+                        case 'string':
+                            return value;
 
-    toString() {
-        return this._register(
-            value => {
-                switch (typeof value) {
-                    case 'string':
-                        return value;
+                        case 'object':
+                            try {
+                                return JSON.stringify(value, null, this._coersionOptions.json.indent);
+                            } catch (error) {
+                                this._throwValidationFailure('cannotConvertObjectToJSON');
+                            }
+                            break;
 
-                    case 'object':
-                        try {
-                            return JSON.stringify(value, null, this._options.json.indent);
-                        } catch (error) {
-                            this._throwValidationFailure('cannotConvertObjectToJSON');
-                        }
-                        break;
-
-                    default:
-                        if (typeof value.toString === 'function') {
-                            return value.toString();
-                        } else {
-                            this._throwValidationFailure('cannotConvertToString');
-                        }
-                        break;
+                        default:
+                            if (typeof value.toString === 'function') {
+                                return value.toString();
+                            } else {
+                                this._throwValidationFailure('cannotConvertToString');
+                            }
+                            break;
+                    }
                 }
             }
         );
