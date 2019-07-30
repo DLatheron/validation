@@ -1,7 +1,6 @@
 'use strict';
 
 const Any = require('./Any');
-const { ValidationErrorTypes } = require('../ValidationError');
 
 class _Object extends Any {
     constructor(contents, options) {
@@ -15,12 +14,12 @@ class _Object extends Any {
     // CanCoerce: {} or defaultValue.
     isObject(contents, { allowAdditionalProperties = false } = {}) {
         return this._register(
-            (value) => {
+            value => {
                 if (!allowAdditionalProperties) {
                     for (const [propertyName] of Object.entries(value)) {
                         if (!contents[propertyName]) {
                             this._throwValidationFailure(
-                                ValidationErrorTypes.unexpectedProperty,
+                                'unexpectedProperty',
                                 { propertyName }
                             );
                         }

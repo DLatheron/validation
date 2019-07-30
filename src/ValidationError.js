@@ -27,15 +27,17 @@ const ValidationErrorTypes = {
     unsupportedTypeForConversion: 'Unsupported type for conversion',
     notExpectedValue: 'Not equal to the expected value',
     cannotConvertObjectToJSON: 'Cannot convert object into JSON string',
-    cannotConvertToString: 'Cannot convert value into a string'
+    cannotConvertToString: 'Cannot convert value into a string',
+    cannotConvertToNumber: 'Cannot convert value into a number'
 };
 
 class ValidationError extends Error {
     constructor(errorType, { type, propertyName, errors } = {}) {
-        super();
+        super(errorType);
 
         this.errorType = errorType;
         this.type = type;
+        this.string = ValidationErrorTypes[errorType];
 
         this.propertyNames = [];
         if (propertyName) {

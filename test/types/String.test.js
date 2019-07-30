@@ -1,46 +1,53 @@
 'use strict';
 
 const _String = require('../../src/types/String');
-const { ValidationError, ValidationErrorTypes } = require('../../src/ValidationError');
 
 describe('String', () => {
-    let _string;
-
     beforeEach(() => {
         jest.spyOn(_String.prototype, 'isString');
-        _string = new _String();
+        jest.spyOn(_String.prototype, 'toString');
     });
 
     describe('constructor', () => {
         it('should set the type to be "string"', () => {
-            _string = new _String();
+            const _string = new _String();
             expect(_string._type).toEqual('string');
         });
 
         it('should set the default value to be the empty string', () => {
-            _string = new _String();
+            const _string = new _String();
             expect(_string._defaultValue).toEqual('');
         });
 
-        it('should register the "isString" validation', () => {
+        it('should default to strict mode', () => {
+            const _string = new _String();
             expect(_string.isString).toHaveBeenCalledTimes(1);
+            expect(_string.toString).toHaveBeenCalledTimes(0);
+        });
+
+        it('should register the "isString" validation in strict mode', () => {
+            const _string = new _String(true);
+            expect(_string.isString).toHaveBeenCalledTimes(1);
+            expect(_string.toString).toHaveBeenCalledTimes(0);
+        });
+
+        it('should register the "toString" validation in coerce mode', () => {
+            const _string = new _String(false);
+            expect(_string.isString).toHaveBeenCalledTimes(0);
+            expect(_string.toString).toHaveBeenCalledTimes(1);
         });
     });
 
     describe('isString', () => {
         describe('validation', () => {
             it('should continue if passed a valid string', () => {
+                const _string = new _String();
                 _string.validate('a valid string');
             });
 
             it('should throw if the value passed is not a valid string', () => {
-                expect(() => _string.validate(12)).toThrow(
-                    new ValidationError(
-                        ValidationErrorTypes.notAString, {
-                            type: 'string'
-                        }
-                    )
-                );
+                const _string = new _String();
+                expect(() => _string.validate(12)).toThrow('notAString');
             });
         });
 
@@ -60,7 +67,10 @@ describe('String', () => {
     });
 
     describe('notEmpty', () => {
+        let _string;
+
         beforeEach(() => {
+            _string = new _String();
             _string.notEmpty();
         });
 
@@ -70,13 +80,7 @@ describe('String', () => {
             });
 
             it('should throw if the valie passed is an empty string', () => {
-                expect(() => _string.validate('')).toThrow(
-                    new ValidationError(
-                        ValidationErrorTypes.cannotBeEmpty, {
-                            type: 'string'
-                        }
-                    )
-                );
+                expect(() => _string.validate('')).toThrow('cannotBeEmpty');
             });
         });
     });

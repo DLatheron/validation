@@ -1,36 +1,60 @@
 'use strict';
 
 const Any = require('./Any');
-const { ValidationErrorTypes } = require('../ValidationError');
+const { merge } = require('lodash');
+
+const defaultOptions = {
+    json: {
+        indent: 0
+    }
+};
 
 class _String extends Any {
-    constructor() {
+    constructor(strict = true, options = {}) {
         super('string');
 
         this._defaultValue = '';
+        this._options = merge({}, defaultOptions, options);
 
-        return this.isString();
+        return (strict
+            ? this.isString()
+            : this.toString()
+        );
     }
 
     isString() {
         return this._register(
-            (value) => {
+            value => {
                 if (typeof value !== 'string') {
-                    this._throwValidationFailure(ValidationErrorTypes.notAString);
+                    this._throwValidationFailure('notAString');
                 }
                 return value;
-            },
-            (coerce) => {
-                if (typeof coerce === 'object') {
-                    try {
-                        return JSON.stringify(coerce);
-                    } catch (error) {
-                        this._throwValidationFailure(ValidationErrorTypes.cannotConvertObjectToJSON);
-                    }
-                } else if (typeof coerce.toString === 'function') {
-                    return coerce.toString();
-                } else {
-                    this._throwValidationFailure(ValidationErrorTypes.cannotConvertToString);
+            }
+        );
+    }
+
+    toString() {
+        return this._register(
+            value => {
+                switch (typeof value) {
+                    case 'string':
+                        return value;
+
+                    case 'object':
+                        try {
+                            return JSON.stringify(value, null, this._options.json.indent);
+                        } catch (error) {
+                            this._throwValidationFailure('cannotConvertObjectToJSON');
+                        }
+                        break;
+
+                    default:
+                        if (typeof value.toString === 'function') {
+                            return value.toString();
+                        } else {
+                            this._throwValidationFailure('cannotConvertToString');
+                        }
+                        break;
                 }
             }
         );
@@ -38,9 +62,9 @@ class _String extends Any {
 
     notEmpty() {
         return this._register(
-            (value) => {
+            value => {
                 if (value.length === 0) {
-                    this._throwValidationFailure(ValidationErrorTypes.cannotBeEmpty);
+                    this._throwValidationFailure('cannotBeEmpty');
                 }
                 return value;
             }
@@ -49,9 +73,9 @@ class _String extends Any {
 
     minLength(minLength) {
         return this._register(
-            (value) => {
+            value => {
                 if (value.length < minLength) {
-                    this._throwValidationFailure(ValidationErrorTypes.tooShort);
+                    this._throwValidationFailure('tooShort');
                 }
                 return value;
             }
@@ -60,9 +84,9 @@ class _String extends Any {
 
     maxLength(maxLength) {
         return this._register(
-            (value) => {
+            value => {
                 if (value.length > maxLength) {
-                    this._throwValidationFailure(ValidationErrorTypes.tooLong);
+                    this._throwValidationFailure('tooLong');
                 }
                 return value;
             }
@@ -71,10 +95,10 @@ class _String extends Any {
 
     alpha() {
         return this._register(
-            (value) => {
+            value => {
                 const regex = /^[a-zA-Z]$/;
                 if (!value.match(regex)) {
-                    this._throwValidationFailure(ValidationErrorTypes.containsNonAlphaCharacters);
+                    this._throwValidationFailure('containsNonAlphaCharacters');
                 }
             }
         );
@@ -82,10 +106,10 @@ class _String extends Any {
 
     alphanum() {
         return this._register(
-            (value) => {
+            value => {
                 const regex = /^[a-zA-Z0-9]$/;
                 if (!value.match(regex)) {
-                    this._throwValidationFailure(ValidationErrorTypes.containsNonAlphaNumericCharacters);
+                    this._throwValidationFailure('containsNonAlphaNumericCharacters');
                 }
             }
         );

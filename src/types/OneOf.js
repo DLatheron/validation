@@ -1,7 +1,6 @@
 'use strict';
 
 const Any = require('./Any');
-const { ValidationErrorTypes } = require('../ValidationError');
 
 class _OneOf extends Any {
     constructor(options) {
@@ -16,7 +15,7 @@ class _OneOf extends Any {
         // TODO: options must be an array.
 
         return this._register(
-            (value) => {
+            value => {
                 const errors = [];
 
                 if (schemaOptions.every(schema => {
@@ -29,7 +28,7 @@ class _OneOf extends Any {
                     }
                 })) {
                     this._throwValidationFailure(
-                        ValidationErrorTypes.aggregateError,
+                        'aggregateError',
                         { errors }
                     );
                 }

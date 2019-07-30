@@ -1,10 +1,10 @@
 'use strict';
 
-const { ValidationError, ValidationErrorTypes } = require('../src/ValidationError');
+const { ValidationError } = require('../src/ValidationError');
 
-describe('ValidatioinError', () => {
+describe('ValidationError', () => {
     const errors = [
-        { errorType: 'unexpectedProperty', propertyName: 'age', expectedMessage: 'Unexpected property "age"' }
+        { errorType: 'unexpectedProperty', propertyName: 'age', expectedMessage: 'Unexpected property' }
     ];
 
     describe.each(errors)(
@@ -16,7 +16,7 @@ describe('ValidatioinError', () => {
                     propertyName
                 });
 
-                expect(error.message).toStrictEqual(expectedMessage);
+                expect(error.string).toStrictEqual(expectedMessage);
             });
         }
     );

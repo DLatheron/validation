@@ -1,7 +1,6 @@
 'use strict';
 
 const Validate = require('../src/validation');
-const { ValidationError, ValidationErrorTypes } = require('../src/ValidationError');
 
 // TODO: How do we get the list of errors back???
 // - Get back a list of properties that fail (depth-wise);
@@ -17,20 +16,8 @@ describe('validation', () => {
         expect(schema.validate(50)).toStrictEqual(50);
         expect(schema.validate(99)).toStrictEqual(99);
 
-        expect(() => schema.validate(17)).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.tooLow, {
-                    type: 'number'
-                }
-            )
-        );
-        expect(() => schema.validate(100)).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.tooHigh, {
-                    type: 'number'
-                }
-            )
-        );
+        expect(() => schema.validate(17)).toThrow('tooLow');
+        expect(() => schema.validate(100)).toThrow('tooHigh');
     });
 
     it('should allow the use of complex ranges', () => {
@@ -47,57 +34,35 @@ describe('validation', () => {
         expect(schema.validate(40)).toStrictEqual(40);
         expect(schema.validate(50)).toStrictEqual(50);
 
-        expect(() => schema.validate(11)).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.notInRange, {
-                    type: 'number'
-                }
-            )
-        );
-        expect(() => schema.validate(15)).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.notInRange, {
-                    type: 'number'
-                }
-            )
-        );
-        expect(() => schema.validate(19)).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.notInRange, {
-                    type: 'number'
-                }
-            )
-        );
-        expect(() => schema.validate(31)).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.notInRange, {
-                    type: 'number'
-                }
-            )
-        );
-        expect(() => schema.validate(35)).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.notInRange, {
-                    type: 'number'
-                }
-            )
-        );
-        expect(() => schema.validate(39)).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.notInRange, {
-                    type: 'number'
-                }
-            )
-        );
+        expect(() => schema.validate(11)).toThrow('notInRange');
+        expect(() => schema.validate(15)).toThrow('notInRange');
+        expect(() => schema.validate(19)).toThrow('notInRange');
+        expect(() => schema.validate(31)).toThrow('notInRange');
+        expect(() => schema.validate(35)).toThrow('notInRange');
+        expect(() => schema.validate(39)).toThrow('notInRange');
     });
 
-    it.skip('should coerce string into numbers', () => {
+    it.only('should coerce string into numbers', () => {
         const schema = Validate
-            .Number()
+            .Number(false)
             .positive()
             .even();
 
-        expect(schema.coerce('10')).toStrictEqual(10);
+        expect(schema.validate('10')).toStrictEqual(10);
+    });
+
+    it('should coerce objects into strings', () => {
+        const schema = Validate
+            .String(false);
+
+        expect(schema.validate({ bool: true })).toStrictEqual('{"bool":true}');
+    });
+
+    it('should coerce objects into strings', () => {
+        const schema = Validate
+            .String(false, { json: { indent: 4 } });
+
+        expect(schema.validate({ bool: true })).toStrictEqual('{\n    "bool": true\n}');
     });
 
     it('should allow the validation of string types', () => {
@@ -108,20 +73,8 @@ describe('validation', () => {
 
         expect(schema.validate(' ')).toStrictEqual(' ');
 
-        expect(() => schema.validate('')).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.cannotBeEmpty, {
-                    type: 'string'
-                }
-            )
-        );
-        expect(() => schema.validate('01234567890123456789+')).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.tooLong, {
-                    type: 'string'
-                }
-            )
-        );
+        expect(() => schema.validate('')).toThrow('cannotBeEmpty');
+        expect(() => schema.validate('01234567890123456789+')).toThrow('tooLong');
     });
 
     it('should allow the validation of either types', () => {
@@ -134,30 +87,12 @@ describe('validation', () => {
         expect(schema.validate(' ')).toStrictEqual(' ');
         expect(schema.validate(8)).toStrictEqual(8);
 
-        expect(() => schema.validate('')).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.aggregateError, {
-                    type: 'string'
-                }
-            )
-        );
-        expect(() => schema.validate(11)).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.aggregateError, {
-                    type: 'number'
-                }
-            )
-        );
-        expect(() => schema.validate({})).toThrow(
-            new ValidationError(
-                ValidationErrorTypes.aggregateError, {
-                    type: 'string'
-                }
-            )
-        );
+        expect(() => schema.validate('')).toThrow('aggregateError');
+        expect(() => schema.validate(11)).toThrow('aggregateError');
+        expect(() => schema.validate({})).toThrow('aggregateError');
     });
 
-    it.only('should allow the validation of objects', () => {
+    it('should allow the validation of objects', () => {
         const schema = Validate
             .Object({
                 name: Validate.String().notEmpty().isRequired(),
@@ -168,9 +103,9 @@ describe('validation', () => {
         expect(schema.validate({ name: 'Alf', age: 75 })).toStrictEqual({ name: 'Alf', age: 75 });
         expect(schema.validate({ name: 'Greta', age: 92 })).toStrictEqual({ name: 'Greta', age: 92 });
 
-        expect(() => schema.validate({ name: 'Liv', age: 17 })).toThrow('"age" is too low');
-        expect(() => schema.validate({ name: '', age: 1 })).toThrow('Cannot be empty');
-        expect(() => schema.validate({ age: 5 })).toThrow('Required value not specified');
+        expect(() => schema.validate({ name: 'Liv', age: 17 })).toThrow('tooLow');
+        expect(() => schema.validate({ name: '', age: 1 })).toThrow('cannotBeEmpty');
+        expect(() => schema.validate({ age: 5 })).toThrow('required');
         expect(() => schema.validate({ name: 'Hi', age: 23, invalidProperty: false })).toThrow('unexpectedProperty');
     });
 
