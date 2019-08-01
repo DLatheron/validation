@@ -2,13 +2,14 @@
 
 const { ValidationError } = require('../ValidationError');
 const { merge } = require('lodash');
+const { SchemaError } = require('../SchemaError');
 
 class Any {
     constructor(type) {
         this._type = type;
 
         this._validations = [];
-        this._required = false;
+        this._required = undefined;
         this._defaultValue = undefined;
         this._coerceValue = false;
         this._coersionOptions = {};
@@ -40,12 +41,17 @@ class Any {
         }
 
         if (value === undefined || value === null) {
-            if (this._required) {
-                this._throwValidationFailure('required');
-            } else {
+            if (!this._required) {
                 return value;
             }
         }
+        //         if (!this._coerceValue) {
+        //             return this._throwValidationFailure('required');
+        //         }
+        //     } else {
+        //         return value;
+        //     }
+        // }
 
         return recurseValidations(value);
     }
@@ -56,14 +62,41 @@ class Any {
         return this;
     }
 
+    _registerFirst(validation) {
+        this._validations.unshift(validation);
+
+        return this;
+    }
+
     isOptional() {
+        if (this._required !== undefined) {
+            return this._throwSchemaError('optionalityAlreadyDefined');
+        }
+
         this._required = false;
+
         return this;
     }
 
     isRequired() {
+        if (this._required !== undefined) {
+            return this._throwSchemaError('optionalityAlreadyDefined');
+        }
+
         this._required = true;
-        return this;
+
+        return this._registerFirst(
+            value => {
+                if (value === undefined || value === null) {
+                    if (this._coerceValue) {
+                        return this._defaultValue;
+                    } else {
+                        return this._throwValidationFailure('required');
+                    }
+                }
+                return value;
+            }
+        );
     }
 
     default(defaultValue) {
@@ -80,6 +113,12 @@ class Any {
     _throwValidationFailure(reason, additionalProperties) {
         throw new ValidationError(reason, {
             type: this._type,
+            ...additionalProperties
+        });
+    }
+
+    _throwSchemaError(reason, additionalProperties) {
+        throw new SchemaError(reason, {
             ...additionalProperties
         });
     }

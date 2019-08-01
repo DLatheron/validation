@@ -1,7 +1,6 @@
 'use strict';
 
 const Any = require('./Any');
-const { } = require('../ValidationError');
 
 class _Boolean extends Any {
     constructor() {
@@ -15,34 +14,32 @@ class _Boolean extends Any {
     isBoolean() {
         return this._register(
             value => {
-                if (typeof value !== 'boolean') {
-                    this._throwValidationFailure('notABoolean');
-                }
-                return value;
-            },
-            (coerce) => {
-                switch (typeof coerce) {
-                    case 'boolean':
-                        return coerce;
+                if (!this._coerceValue) {
+                    if (typeof value !== 'boolean') {
+                        this._throwValidationFailure('notABoolean');
+                    }
+                    return value;
+                } else {
+                    switch (typeof value) {
+                        case 'boolean':
+                            return value;
 
-                    case 'number':
-                        return coerce !== 0;
+                        case 'number':
+                            return value !== 0;
 
-                    case 'string':
-                        switch (coerce.toLowerCase().trim()) {
-                            case 'true': case '1': case 'yes':
-                                return true;
-                            case 'false': case '0': case 'no': case null:
-                                return false;
-                            default :
-                                this._throwValidationFailure('cannotConvertStringToBoolean');
-                                break;
-                        }
-                        break;
+                        case 'string':
+                            switch (value.toLowerCase().trim()) {
+                                case 'true': case '1': case 'yes':
+                                    return true;
+                                case 'false': case '0': case 'no':
+                                    return false;
+                                default :
+                                    return this._throwValidationFailure('cannotConvertStringToBoolean');
+                            }
 
-                    default:
-                        this._throwValidationFailure('unsupportedTypeForConversion');
-                        break;
+                        default:
+                            return this._throwValidationFailure('unsupportedTypeForConversion');
+                    }
                 }
             }
         );
@@ -52,7 +49,7 @@ class _Boolean extends Any {
         return this._register(
             value => {
                 if (value !== expectedValue) {
-                    this._throwValidationFailure('notExpectedValue');
+                    return this._throwValidationFailure('notExpectedValue');
                 }
                 return value;
             }

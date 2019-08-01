@@ -4,6 +4,8 @@ const Validate = require('../src/validation');
 
 // TODO: How do we get the list of errors back???
 // - Get back a list of properties that fail (depth-wise);
+// - Make required pull a validator in a position 0... then it will be
+//   required UNLESS coersion is enabled...
 
 describe('validation', () => {
     it('should allow the validation of number types', () => {
@@ -161,28 +163,40 @@ describe('validation', () => {
         ])).toThrow('tooLong');
     });
 
-    it.skip('should coerce arrays', () => {
+    it('should coerce arrays', () => {
         const schema = Validate
             .Array()
-            .notEmpty()
-            .maxLength(4);
+            .maxLength(4)
+            .coerce()
+            .isRequired();
 
-        expect(schema.coerce()).toStrictEqual([]);
+        expect(schema.validate()).toStrictEqual([]);
     });
 
-    it.skip('should value booleans', () => {
+    it('should coerce arrays (even if the array is not empty)?', () => {
+        const schema = Validate
+            .Array(Validate.String().default('*Empty*'))
+            .notEmpty()
+            .maxLength(4)
+            .coerce()
+            .isRequired();
+
+        expect(schema.validate()).toStrictEqual(['*Empty*']);
+    });
+
+    it('should coerce value to booleans', () => {
         const schema = Validate
             .Boolean()
-            .is(true);
+            .coerce();
 
         expect(schema.validate(true)).toBe(true);
-        expect(schema.coerce(23)).toBe(true);
-        expect(schema.coerce('true')).toBe(true);
-        expect(schema.coerce('1')).toBe(true);
-        expect(schema.coerce('yes')).toBe(true);
+        expect(schema.validate(23)).toBe(true);
+        expect(schema.validate('true')).toBe(true);
+        expect(schema.validate('1')).toBe(true);
+        expect(schema.validate('yes')).toBe(true);
 
         expect(schema.validate(false)).toBe(false);
-        expect(schema.coerce('false')).toBe(false);
+        expect(schema.validate('false')).toBe(false);
     });
 
     it('should validate optional values', () => {
@@ -208,15 +222,16 @@ describe('validation', () => {
         expect(() => schema.validate(undefined)).toThrow('required');
     });
 
-    it.skip('should use the value specified as a default if coersion fails', () => {
+    it('should use the value specified as a default if coersion fails', () => {
         const schema = Validate
             .Number()
             .isRequired()
+            .coerce()
             .default(18);
 
-        expect(schema.coerce(23)).toBe(23);
-        expect(schema.coerce('37')).toBe(37);
-        expect(schema.coerce(undefined)).toBe(18);
+        expect(schema.validate(23)).toBe(23);
+        expect(schema.validate('37')).toBe(37);
+        expect(schema.validate(undefined)).toBe(18);
     });
 
     it('should work with complex schema', () => {

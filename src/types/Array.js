@@ -3,39 +3,35 @@
 const Any = require('./Any');
 
 class _Array extends Any {
-    constructor(schema) {
+    constructor(elementSchema = new Any()) {
         super('array');
 
-        this._defaultValue = [];
+        if (!elementSchema) {
+            return this._throwSchemaError('missingSchema');
+        }
 
-        return this.isArray(schema);
+        this._defaultValue = [];
+        this._elementSchema = elementSchema;
+
+        return this.isArray();
     }
 
     // CanCoerce: cast existing value to array?
-    isArray(schema) {
+    isArray() {
         return this._register(
             (value, next) => {
                 if (!Array.isArray(value)) {
-                    this._throwValidationFailure('notAnArray');
+                    if (!this._coerceValue) {
+                        return this._throwValidationFailure('notAnArray');
+                    } else {
+                        value = [];
+                    }
                 }
 
                 value = next(value);
 
                 value.forEach(v => {
-                    schema._validate(v);
-                });
-
-                return value;
-            },
-            (value, next) => {
-                if (!Array.isArray(value)) {
-                    value = [];
-                }
-
-                value = next(value);
-
-                value.forEach((v) => {
-                    schema._validate(v);
+                    this._elementSchema._validate(v);
                 });
 
                 return value;
@@ -43,17 +39,18 @@ class _Array extends Any {
         );
     }
 
-    // CanCoerce: empty array.
+    // TODO: How do we coerce an non-empty array???
     notEmpty() {
         return this._register(
             value => {
                 if (value.length === 0) {
-                    this._throwValidationFailure('cannotBeEmpty');
+                    if (this._coerceValue) {
+                        value.push(this._elementSchema._defaultValue);
+                    } else {
+                        return this._throwValidationFailure('cannotBeEmpty');
+                    }
                 }
                 return value;
-            },
-            (coerce) => {
-                return coerce || [];
             }
         );
     }
@@ -63,7 +60,7 @@ class _Array extends Any {
         return this._register(
             value => {
                 if (value.length < minLength) {
-                    this._throwValidationFailure('tooShort');
+                    return this._throwValidationFailure('tooShort');
                 }
                 return value;
             }
@@ -75,7 +72,7 @@ class _Array extends Any {
         return this._register(
             value => {
                 if (value.length > maxLength) {
-                    this._throwValidationFailure('tooLong');
+                    return this._throwValidationFailure('tooLong');
                 }
                 return value;
             }
