@@ -13,15 +13,11 @@ describe('String', () => {
 
     describe('constructor', () => {
         it('should set the type to be "string"', () => {
-            expect(_string._type).toEqual('string');
+            expect(_string._type).toBe('string');
         });
 
         it('should set the default value to be the empty string', () => {
-            expect(_string._defaultValue).toEqual('');
-        });
-
-        it('should default to strict mode', () => {
-            expect(_string.isString).toHaveBeenCalledTimes(1);
+            expect(_string._defaultValue).toBe('');
         });
 
         it('should register the "isString" validation', () => {
@@ -35,7 +31,7 @@ describe('String', () => {
                 _string.validate('a valid string');
             });
 
-            it('should throw if the value passed is not a valid string', () => {
+            it('should throw if the value passed is not a string', () => {
                 expect(() => _string.validate(12)).toThrow('notAString');
             });
         });
@@ -45,17 +41,26 @@ describe('String', () => {
                 _string = new _String().coerce();
             });
 
-            it('should convert a boolean to a string', () => {
-                expect(_string.validate(true)).toEqual('true');
-            });
+            describe.each([
+                // Numbers.
+                { value: 0, expectedValue: '0' },
+                { value: 1, expectedValue: '1' },
+                { value: -1, expectedValue: '-1' },
+                { value: 25, expectedValue: '25' },
 
-            it('should convert a number to a string', () => {
-                expect(_string.validate(1234)).toEqual('1234');
-            });
+                // Booleans.
+                { value: true, expectedValue: 'true' },
+                { value: false, expectedValue: 'false' },
 
-            it('should convert an object to a string', () => {
-                expect(_string.validate({ name: 'Bill' })).toEqual('{"name":"Bill"}');
-            });
+                // Objects.
+                { value: { name: 'Bill' }, expectedValue: '{"name":"Bill"}' }
+
+            ])(
+                'successful coersions', ({ value, expectedValue }) => {
+                    it(`should coerce ${typeof value} === "${value}" to a string === ${expectedValue}`, () => {
+                        expect(_string.validate(value)).toBe(expectedValue);
+                    });
+                });
         });
     });
 
