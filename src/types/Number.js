@@ -163,7 +163,10 @@ class _Number extends Any {
         return this._register(
             value => {
                 if (value % 2 !== 0) {
-                    this._throwValidationFailure('notEven');
+                    return (this._isCoercing
+                        ? value - Math.sign(value)
+                        : this._throwValidationFailure('notEven')
+                    );
                 }
                 return value;
             }
@@ -174,7 +177,10 @@ class _Number extends Any {
         return this._register(
             value => {
                 if (value % 2 !== 1) {
-                    this._throwValidationFailure('notOdd');
+                    return (this._isCoercing
+                        ? value + (Math.sign(value) || 1)
+                        : this._throwValidationFailure('notOdd')
+                    );
                 }
                 return value;
             }

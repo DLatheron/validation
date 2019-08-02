@@ -372,4 +372,70 @@ describe('Number', () => {
             });
         });
     });
+
+    describe('even', () => {
+        beforeEach(() => {
+            _number = _number.even();
+        });
+
+        describe('validation', () => {
+            it('should continue if the value is even', () => {
+                expect(_number.validate(2)).toBe(2);
+            });
+
+            it('should throw an error if the value is odd', () => {
+                expect(() => _number.validate(1)).toThrow('notEven');
+            });
+        });
+
+        describe('coersion', () => {
+            beforeEach(() => {
+                _number = _number.coerce();
+            });
+
+            it('should continue if the value is even', () => {
+                expect(_number.validate(4)).toBe(4);
+            });
+
+            it('should coerce an odd value to become even by moving it towards zero', () => {
+                expect(_number.validate(5)).toBe(4);
+                expect(_number.validate(-5)).toBe(-4);
+            });
+        });
+    });
+
+    describe('odd', () => {
+        beforeEach(() => {
+            _number = _number.odd();
+        });
+
+        describe('validation', () => {
+            it('should continue if the value is odd', () => {
+                expect(_number.validate(3)).toBe(3);
+            });
+
+            it('should throw an error if the value is even', () => {
+                expect(() => _number.validate(6)).toThrow('notOdd');
+            });
+        });
+
+        describe('coersion', () => {
+            beforeEach(() => {
+                _number = _number.coerce();
+            });
+
+            it('should continue if the value is odd', () => {
+                expect(_number.validate(7)).toBe(7);
+            });
+
+            it('should coerce an even value to become odd by moving it away from zero', () => {
+                expect(_number.validate(4)).toBe(5);
+                expect(_number.validate(-4)).toBe(-5);
+            });
+
+            it('should coerce zero to become odd by added 1 to it', () => {
+                expect(_number.validate(0)).toBe(1);
+            });
+        });
+    });
 });
