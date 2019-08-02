@@ -22,27 +22,27 @@ describe('validation', () => {
         expect(() => schema.validate(100)).toThrow('tooHigh');
     });
 
-    it('should allow the use of complex ranges', () => {
-        const schema = Validate
-            .Number()
-            .ranges([{ max: 10 }, { min: 20, max: 30 }, { min: 40 }]);
+    // it('should allow the use of complex ranges', () => {
+    //     const schema = Validate
+    //         .Number()
+    //         .ranges([{ max: 10 }, { min: 20, max: 30 }, { min: 40 }]);
 
-        expect(schema.validate(-10)).toStrictEqual(-10);
-        expect(schema.validate(0)).toStrictEqual(0);
-        expect(schema.validate(10)).toStrictEqual(10);
-        expect(schema.validate(20)).toStrictEqual(20);
-        expect(schema.validate(25)).toStrictEqual(25);
-        expect(schema.validate(30)).toStrictEqual(30);
-        expect(schema.validate(40)).toStrictEqual(40);
-        expect(schema.validate(50)).toStrictEqual(50);
+    //     expect(schema.validate(-10)).toStrictEqual(-10);
+    //     expect(schema.validate(0)).toStrictEqual(0);
+    //     expect(schema.validate(10)).toStrictEqual(10);
+    //     expect(schema.validate(20)).toStrictEqual(20);
+    //     expect(schema.validate(25)).toStrictEqual(25);
+    //     expect(schema.validate(30)).toStrictEqual(30);
+    //     expect(schema.validate(40)).toStrictEqual(40);
+    //     expect(schema.validate(50)).toStrictEqual(50);
 
-        expect(() => schema.validate(11)).toThrow('notInRange');
-        expect(() => schema.validate(15)).toThrow('notInRange');
-        expect(() => schema.validate(19)).toThrow('notInRange');
-        expect(() => schema.validate(31)).toThrow('notInRange');
-        expect(() => schema.validate(35)).toThrow('notInRange');
-        expect(() => schema.validate(39)).toThrow('notInRange');
-    });
+    //     expect(() => schema.validate(11)).toThrow('notInRange');
+    //     expect(() => schema.validate(15)).toThrow('notInRange');
+    //     expect(() => schema.validate(19)).toThrow('notInRange');
+    //     expect(() => schema.validate(31)).toThrow('notInRange');
+    //     expect(() => schema.validate(35)).toThrow('notInRange');
+    //     expect(() => schema.validate(39)).toThrow('notInRange');
+    // });
 
     it('should coerce a string into numbers', () => {
         const schema = Validate

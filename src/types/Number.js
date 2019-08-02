@@ -82,38 +82,49 @@ class _Number extends Any {
         return this._register(
             value => {
                 if (min !== undefined && value < min) {
-                    this._throwValidationFailure('tooLow');
+                    return (this._isCoercing
+                        ? min
+                        : this._throwValidationFailure('tooLow')
+                    );
                 } else if (max !== undefined && value > max) {
-                    this._throwValidationFailure('tooHigh');
+                    return (this._isCoercing
+                        ? max
+                        : this._throwValidationFailure('tooHigh')
+                    );
                 }
                 return value;
             }
         );
     }
 
-    ranges(ranges) {
-        return this._register(
-            value => {
-                if (!ranges.some(range => {
-                    if (range.min !== undefined && value < range.min) {
-                        return false;
-                    } else if (range.max !== undefined && value > range.max) {
-                        return false;
-                    }
-                    return true;
-                })) {
-                    this._throwValidationFailure('notInRange');
-                }
-                return value;
-            }
-        );
-    }
+    // TODO: Replace with an Any.Or function that evaluates multiple ranges?
+    //       How would that work with coersion? How would this work with coersion?
+    // ranges(ranges) {
+    //     return this._register(
+    //         value => {
+    //             if (!ranges.some(range => {
+    //                 if (range.min !== undefined && value < range.min) {
+    //                     return false;
+    //                 } else if (range.max !== undefined && value > range.max) {
+    //                     return false;
+    //                 }
+    //                 return true;
+    //             })) {
+    //                 this._throwValidationFailure('notInRange');
+    //             }
+    //             return value;
+    //         }
+    //     );
+    // }
 
     positive() {
         return this._register(
             value => {
-                if (value < 0) {
-                    this._throwValidationFailure('notPositive');
+                if (value <= 0) {
+                    return (this._isCoercing
+                        ? 1
+                        : this._throwValidationFailure('notPositive')
+                    );
                 }
                 return value;
             }
@@ -123,8 +134,11 @@ class _Number extends Any {
     negative() {
         return this._register(
             value => {
-                if (value > 0) {
-                    this._throwValidationFailure('notNegative');
+                if (value >= 0) {
+                    return (this._isCoercing
+                        ? -1
+                        : this._throwValidationFailure('notNegative')
+                    );
                 }
                 return value;
             }
@@ -135,7 +149,10 @@ class _Number extends Any {
         return this._register(
             value => {
                 if (value === 0) {
-                    this._throwValidationFailure('nonZero');
+                    return (this._isCoercing
+                        ? this._defaultValue
+                        : this._throwValidationFailure('nonZero')
+                    );
                 }
                 return value;
             }
