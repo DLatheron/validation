@@ -7,6 +7,7 @@
         "test": "./node_modules/jest/bin/jest.js",
         "test:watch": "npm test -- --watchAll",
         "test:coverage": "npm test -- --coverage",
+        "test:coverage:watch": "npm test -- --coverage --watchAll",
         "lint": "./node_modules/eslint/bin/eslint.js .",
         "lint:watch": "./node_modules/eslint-watch/bin/esw --watch --clear --changed --color"
     },

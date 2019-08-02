@@ -33,17 +33,11 @@ class _String extends Any {
                             try {
                                 return JSON.stringify(value, null, this._coersionOptions.json.indent);
                             } catch (error) {
-                                this._throwValidationFailure('cannotConvertObjectToJSON');
+                                return this._throwValidationFailure('cannotConvertObjectToJSON');
                             }
-                            break;
 
                         default:
-                            if (typeof value.toString === 'function') {
-                                return value.toString();
-                            } else {
-                                this._throwValidationFailure('cannotConvertToString');
-                            }
-                            break;
+                            return value.toString();
                     }
                 }
             }
@@ -54,7 +48,10 @@ class _String extends Any {
         return this._register(
             value => {
                 if (value.length === 0) {
-                    this._throwValidationFailure('cannotBeEmpty');
+                    return (this._isCoercing
+                        ? this._defaultValue
+                        : this._throwValidationFailure('cannotBeEmpty')
+                    );
                 }
                 return value;
             }
@@ -65,7 +62,10 @@ class _String extends Any {
         return this._register(
             value => {
                 if (value.length < minLength) {
-                    this._throwValidationFailure('tooShort');
+                    return (this._isCoercing
+                        ? this._defaultValue
+                        : this._throwValidationFailure('tooShort')
+                    );
                 }
                 return value;
             }
@@ -76,7 +76,10 @@ class _String extends Any {
         return this._register(
             value => {
                 if (value.length > maxLength) {
-                    this._throwValidationFailure('tooLong');
+                    return (this._isCoercing
+                        ? value.slice(0, maxLength)
+                        : this._throwValidationFailure('tooLong')
+                    );
                 }
                 return value;
             }
@@ -86,21 +89,30 @@ class _String extends Any {
     alpha() {
         return this._register(
             value => {
-                const regex = /^[a-zA-Z]$/;
-                if (!value.match(regex)) {
-                    this._throwValidationFailure('containsNonAlphaCharacters');
+                const regex = /[^a-zA-Z]/;
+                if (value.match(regex)) {
+                    return (this._isCoercing
+                        ? this._defaultValue
+                        : this._throwValidationFailure('containsNonAlphaCharacters')
+                    );
                 }
+                return value;
             }
         );
     }
 
+    // TODO: alphanum or alphaNum?
     alphanum() {
         return this._register(
             value => {
-                const regex = /^[a-zA-Z0-9]$/;
-                if (!value.match(regex)) {
-                    this._throwValidationFailure('containsNonAlphaNumericCharacters');
+                const regex = /[^a-zA-Z0-9]/;
+                if (value.match(regex)) {
+                    return (this._isCoercing
+                        ? this._defaultValue
+                        : this._throwValidationFailure('containsNonAlphaNumericCharacters')
+                    );
                 }
+                return value;
             }
         );
     }

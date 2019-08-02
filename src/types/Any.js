@@ -122,6 +122,10 @@ class Any {
             ...additionalProperties
         });
     }
+
+    get _isCoercing() {
+        return this._coerceValue;
+    }
 }
 
 module.exports = Any;
