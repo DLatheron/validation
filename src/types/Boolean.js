@@ -16,7 +16,7 @@ class _Boolean extends Any {
             value => {
                 if (!this._coerceValue) {
                     if (typeof value !== 'boolean') {
-                        this._throwValidationFailure('notABoolean');
+                        return this._throwValidationFailure('notABoolean');
                     }
                     return value;
                 } else {

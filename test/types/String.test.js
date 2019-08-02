@@ -38,7 +38,7 @@ describe('String', () => {
 
         describe('coersion', () => {
             beforeEach(() => {
-                _string = new _String().coerce();
+                _string = _string.coerce();
             });
 
             describe.each([
@@ -54,7 +54,6 @@ describe('String', () => {
 
                 // Objects.
                 { value: { name: 'Bill' }, expectedValue: '{"name":"Bill"}' }
-
             ])(
                 'successful coersions', ({ value, expectedValue }) => {
                     it(`should coerce ${typeof value} === "${value}" to a string === ${expectedValue}`, () => {
@@ -85,7 +84,7 @@ describe('String', () => {
 
     describe('notEmpty', () => {
         beforeEach(() => {
-            _string = new _String().notEmpty();
+            _string = _string.notEmpty();
         });
 
         describe('validation', () => {
@@ -119,7 +118,7 @@ describe('String', () => {
         const longString = '01234';
 
         beforeEach(() => {
-            _string = new _String().minLength(4);
+            _string = _string.minLength(4);
         });
 
         describe('validation', () => {
@@ -161,7 +160,7 @@ describe('String', () => {
         const tooLongString = '01234';
 
         beforeEach(() => {
-            _string = new _String().maxLength(4);
+            _string = _string.maxLength(4);
         });
 
         describe('validation', () => {
@@ -202,7 +201,7 @@ describe('String', () => {
         const nonAlphaCharacters = 'abcdef0123456789';
 
         beforeEach(() => {
-            _string = new _String().alpha();
+            _string = _string.alpha();
         });
 
         describe('validation', () => {
@@ -235,7 +234,7 @@ describe('String', () => {
         const nonAlphaNumCharacters = 'aA0&*@';
 
         beforeEach(() => {
-            _string = new _String().alphanum();
+            _string = _string.alphanum();
         });
 
         describe('validation', () => {

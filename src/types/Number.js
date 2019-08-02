@@ -20,7 +20,7 @@ class _Number extends Any {
             value => {
                 if (!this._coerceValue) {
                     if (typeof value !== 'number') {
-                        this._throwValidationFailure('notANumber');
+                        return this._throwValidationFailure('notANumber');
                     }
                     return value;
                 } else {
@@ -49,38 +49,14 @@ class _Number extends Any {
         );
     }
 
-    toNumber() {
-        return this._register(
-            value => {
-                switch (typeof value) {
-                    case 'number':
-                        return value;
-
-                    case 'string':
-                        if (value === '') {
-                            return this._throwValidationFailure('notANumber');
-                        }
-                        const valueAsNumber = Number(value).valueOf();
-                        if (!isFinite(valueAsNumber)) {
-                            return this._throwValidationFailure('notANumber');
-                        }
-                        return valueAsNumber;
-
-                    case 'boolean':
-                        return value ? 1 : 0;
-
-                    default:
-                        this._throwValidationFailure('cannotConvertToNumber');
-                }
-            }
-        );
-    }
-
     min(min) {
         return this._register(
             value => {
                 if (value < min) {
-                    this._throwValidationFailure('tooLow');
+                    return (this._isCoercing
+                        ? min
+                        : this._throwValidationFailure('tooLow')
+                    );
                 }
 
                 return value;
@@ -92,7 +68,10 @@ class _Number extends Any {
         return this._register(
             value => {
                 if (value > max) {
-                    this._throwValidationFailure('tooHigh');
+                    return (this._isCoercing
+                        ? max
+                        : this._throwValidationFailure('tooHigh')
+                    );
                 }
                 return value;
             }
@@ -103,9 +82,9 @@ class _Number extends Any {
         return this._register(
             value => {
                 if (min !== undefined && value < min) {
-                    this._throwValidationFailure('tooLowForRange');
+                    this._throwValidationFailure('tooLow');
                 } else if (max !== undefined && value > max) {
-                    this._throwValidationFailure('tooHighForRange');
+                    this._throwValidationFailure('tooHigh');
                 }
                 return value;
             }

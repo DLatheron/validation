@@ -21,7 +21,7 @@ class _String extends Any {
             value => {
                 if (!this._coerceValue) {
                     if (typeof value !== 'string') {
-                        this._throwValidationFailure('notAString');
+                        return this._throwValidationFailure('notAString');
                     }
                     return value;
                 } else {
