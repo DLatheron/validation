@@ -16,7 +16,6 @@ class _Array extends Any {
         return this.isArray();
     }
 
-    // CanCoerce: cast existing value to array?
     isArray() {
         return this._register(
             (value, next) => {
@@ -39,7 +38,6 @@ class _Array extends Any {
         );
     }
 
-    // TODO: How do we coerce an non-empty array???
     notEmpty() {
         return this._register(
             value => {
@@ -54,12 +52,14 @@ class _Array extends Any {
         );
     }
 
-    // CanCoerce: Add any default objects?
     minLength(minLength) {
         return this._register(
             value => {
                 if (value.length < minLength) {
-                    return this._throwValidationFailure('tooShort');
+                    return (this._isCoercing
+                        ? this._defaultValue
+                        : this._throwValidationFailure('tooShort')
+                    );
                 }
                 return value;
             }

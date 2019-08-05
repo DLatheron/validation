@@ -123,4 +123,46 @@ describe('Array', () => {
             });
         });
     });
+
+    describe('minLength', () => {
+        const correctLengthArray = [1, 2, 3, 4];
+        const tooShortArray = [1, 2, 3];
+        const longArray = [1, 2, 3, 4, 5];
+
+        beforeEach(() => {
+            _array = _array.minLength(4);
+        });
+
+        describe('validation', () => {
+            it('should continue if the value is the minimum length', () => {
+                expect(_array.validate(correctLengthArray)).toStrictEqual(correctLengthArray);
+            });
+
+            it('should continue if the value is longer than the minimum length', () => {
+                expect(_array.validate(longArray)).toStrictEqual(longArray);
+            });
+
+            it('should throw if the value is shorter than the minimum length', () => {
+                expect(() => _array.validate(tooShortArray)).toThrow('tooShort');
+            });
+        });
+
+        describe('coersion', () => {
+            beforeEach(() => {
+                _array = _array.coerce().default(['defaultValue']);
+            });
+
+            it('should continue if the value is the minimum length', () => {
+                expect(_array.validate(correctLengthArray)).toStrictEqual(correctLengthArray);
+            });
+
+            it('should continue if the value is longer than the minimum length', () => {
+                expect(_array.validate(longArray)).toStrictEqual(longArray);
+            });
+
+            it('should coerce the value that is too short by replacing it with the default value', () => {
+                expect(_array.validate(tooShortArray)).toStrictEqual(['defaultValue']);
+            });
+        });
+    });
 });
