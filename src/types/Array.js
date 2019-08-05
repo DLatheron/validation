@@ -3,12 +3,12 @@
 const Any = require('./Any');
 
 class _Array extends Any {
-    constructor(elementSchema = new Any()) {
-        super('array');
-
+    constructor(elementSchema) {
         if (!elementSchema) {
-            return this._throwSchemaError('missingSchema');
+            elementSchema = new Any();
         }
+
+        super('array');
 
         this._defaultValue = [];
         this._elementSchema = elementSchema;
@@ -24,7 +24,7 @@ class _Array extends Any {
                     if (!this._coerceValue) {
                         return this._throwValidationFailure('notAnArray');
                     } else {
-                        value = [];
+                        value = [value];
                     }
                 }
 
@@ -44,11 +44,10 @@ class _Array extends Any {
         return this._register(
             value => {
                 if (value.length === 0) {
-                    if (this._coerceValue) {
-                        value.push(this._elementSchema._defaultValue);
-                    } else {
-                        return this._throwValidationFailure('cannotBeEmpty');
-                    }
+                    return (this._isCoercing
+                        ? this._defaultValue
+                        : this._throwValidationFailure('cannotBeEmpty')
+                    );
                 }
                 return value;
             }

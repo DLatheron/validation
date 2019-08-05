@@ -92,7 +92,7 @@ describe('String', () => {
                 _string.validate('not empty');
             });
 
-            it('should throw if the valie passed is an empty string', () => {
+            it('should throw if the value passed is an empty string', () => {
                 expect(() => _string.validate('')).toThrow('cannotBeEmpty');
             });
         });
@@ -102,8 +102,8 @@ describe('String', () => {
                 _string = _string.coerce().default('defaultValue');
             });
 
-            it('should containue if passed a non-empty string', () => {
-                _string.validate('not empty');
+            it('should continue if passed a non-empty string', () => {
+                expect(_string.validate('not empty')).toBe('not empty');
             });
 
             it('should coerce the value of an empty string by replacing it with the default value', () => {

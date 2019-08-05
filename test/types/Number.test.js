@@ -13,11 +13,11 @@ describe('Number', () => {
 
     describe('constructor', () => {
         it('should set the type to be "number"', () => {
-            expect(_number._type).toEqual('number');
+            expect(_number._type).toBe('number');
         });
 
         it('should set the default value to be 0', () => {
-            expect(_number._defaultValue).toEqual(0);
+            expect(_number._defaultValue).toBe(0);
         });
 
         it('should register the "isNumber" validation', () => {
@@ -28,7 +28,7 @@ describe('Number', () => {
     describe('isNumber', () => {
         describe('validation', () => {
             it('should continue if passed a valid number', () => {
-                _number.validate(1234);
+                expect(_number.validate(1234)).toBe(1234);
             });
 
             it('should throw if the value passed is not a valid number', () => {

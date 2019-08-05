@@ -173,7 +173,7 @@ describe('validation', () => {
         expect(schema.validate()).toStrictEqual([]);
     });
 
-    it('should coerce arrays (even if the array is not empty)?', () => {
+    it.skip('should coerce arrays (even if the array is not empty)?', () => {
         const schema = Validate
             .Array(Validate.String().default('*Empty*'))
             .notEmpty()
