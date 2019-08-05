@@ -66,12 +66,14 @@ class _Array extends Any {
         );
     }
 
-    // CanCoerce: Remove additional elements?
     maxLength(maxLength) {
         return this._register(
             value => {
                 if (value.length > maxLength) {
-                    return this._throwValidationFailure('tooLong');
+                    return (this._isCoercing
+                        ? value.slice(0, maxLength)
+                        : this._throwValidationFailure('tooLong')
+                    );
                 }
                 return value;
             }

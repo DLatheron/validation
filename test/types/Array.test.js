@@ -165,4 +165,46 @@ describe('Array', () => {
             });
         });
     });
+
+    describe('maxLength', () => {
+        const correctLengthArray = [1, 2, 3, 4];
+        const shortArray = [1, 2, 3];
+        const tooLongArray = [1, 2, 3, 4, 5];
+
+        beforeEach(() => {
+            _array = _array.maxLength(4);
+        });
+
+        describe('validation', () => {
+            it('should continue if the value is the maximum length', () => {
+                expect(_array.validate(correctLengthArray)).toStrictEqual(correctLengthArray);
+            });
+
+            it('should continue if the value is shorter than the maximum length', () => {
+                expect(_array.validate(shortArray)).toStrictEqual(shortArray);
+            });
+
+            it('should throw if the value is shorter than the maximum length', () => {
+                expect(() => _array.validate(tooLongArray)).toThrow('tooLong');
+            });
+        });
+
+        describe('coersion', () => {
+            beforeEach(() => {
+                _array = _array.coerce().default(['defaultValue']);
+            });
+
+            it('should continue if the value is the maximum length', () => {
+                expect(_array.validate(correctLengthArray)).toStrictEqual(correctLengthArray);
+            });
+
+            it('should continue if the value is shorter than the maximum length', () => {
+                expect(_array.validate(shortArray)).toStrictEqual(shortArray);
+            });
+
+            it('should coerce the value that is too long by trimming it', () => {
+                expect(_array.validate(tooLongArray)).toStrictEqual(correctLengthArray);
+            });
+        });
+    });
 });
