@@ -23,10 +23,6 @@ class Any {
      * false.
      */
     validate(value) {
-        return this._validate(value);
-    }
-
-    _validate(value) {
         const validationStack = [...this._validations];
         validationStack.reverse();
 
@@ -45,13 +41,6 @@ class Any {
                 return value;
             }
         }
-        //         if (!this._coerceValue) {
-        //             return this._throwValidationFailure('required');
-        //         }
-        //     } else {
-        //         return value;
-        //     }
-        // }
 
         return recurseValidations(value);
     }

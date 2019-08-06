@@ -28,7 +28,7 @@ class _Object extends Any {
 
                 for (const [propertyName] of Object.entries(contents)) {
                     try {
-                        contents[propertyName]._validate(value[propertyName]);
+                        contents[propertyName].validate(value[propertyName]);
                     } catch (error) {
                         error.addPropertyName(propertyName);
                         throw error;

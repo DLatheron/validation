@@ -30,7 +30,7 @@ class _Array extends Any {
                 value = next(value);
 
                 value.forEach(v => {
-                    this._elementSchema._validate(v);
+                    this._elementSchema.validate(v);
                 });
 
                 return value;

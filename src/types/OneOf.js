@@ -20,7 +20,7 @@ class _OneOf extends Any {
 
                 if (schemaOptions.every(schema => {
                     try {
-                        schema._validate(value);
+                        schema.validate(value);
                         return false;
                     } catch (error) {
                         errors.push(error);
