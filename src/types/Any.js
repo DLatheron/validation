@@ -80,7 +80,7 @@ class Any {
                     if (this._coerceValue) {
                         return this._defaultValue;
                     } else {
-                        return this._throwValidationFailure('required');
+                        return this._throwValidationError('required');
                     }
                 }
                 return value;
@@ -99,7 +99,7 @@ class Any {
         return this;
     }
 
-    _throwValidationFailure(reason, additionalProperties) {
+    _throwValidationError(reason, additionalProperties) {
         throw new ValidationError(reason, {
             type: this._type,
             ...additionalProperties

@@ -20,7 +20,7 @@ class _Number extends Any {
             value => {
                 if (!this._coerceValue) {
                     if (typeof value !== 'number') {
-                        return this._throwValidationFailure('notANumber');
+                        return this._throwValidationError('notANumber');
                     }
                     return value;
                 } else {
@@ -30,11 +30,11 @@ class _Number extends Any {
 
                         case 'string':
                             if (value === '') {
-                                return this._throwValidationFailure('notANumber');
+                                return this._throwValidationError('notANumber');
                             }
                             const valueAsNumber = Number(value).valueOf();
                             if (!isFinite(valueAsNumber)) {
-                                return this._throwValidationFailure('notANumber');
+                                return this._throwValidationError('notANumber');
                             }
                             return valueAsNumber;
 
@@ -42,7 +42,7 @@ class _Number extends Any {
                             return value ? 1 : 0;
 
                         default:
-                            this._throwValidationFailure('cannotConvertToNumber');
+                            this._throwValidationError('cannotConvertToNumber');
                     }
                 }
             }
@@ -55,7 +55,7 @@ class _Number extends Any {
                 if (value < min) {
                     return (this._isCoercing
                         ? min
-                        : this._throwValidationFailure('tooLow')
+                        : this._throwValidationError('tooLow')
                     );
                 }
 
@@ -70,7 +70,7 @@ class _Number extends Any {
                 if (value > max) {
                     return (this._isCoercing
                         ? max
-                        : this._throwValidationFailure('tooHigh')
+                        : this._throwValidationError('tooHigh')
                     );
                 }
                 return value;
@@ -84,12 +84,12 @@ class _Number extends Any {
                 if (min !== undefined && value < min) {
                     return (this._isCoercing
                         ? min
-                        : this._throwValidationFailure('tooLow')
+                        : this._throwValidationError('tooLow')
                     );
                 } else if (max !== undefined && value > max) {
                     return (this._isCoercing
                         ? max
-                        : this._throwValidationFailure('tooHigh')
+                        : this._throwValidationError('tooHigh')
                     );
                 }
                 return value;
@@ -110,7 +110,7 @@ class _Number extends Any {
     //                 }
     //                 return true;
     //             })) {
-    //                 this._throwValidationFailure('notInRange');
+    //                 this._throwValidationError('notInRange');
     //             }
     //             return value;
     //         }
@@ -123,7 +123,7 @@ class _Number extends Any {
                 if (value <= 0) {
                     return (this._isCoercing
                         ? 1
-                        : this._throwValidationFailure('notPositive')
+                        : this._throwValidationError('notPositive')
                     );
                 }
                 return value;
@@ -137,7 +137,7 @@ class _Number extends Any {
                 if (value >= 0) {
                     return (this._isCoercing
                         ? -1
-                        : this._throwValidationFailure('notNegative')
+                        : this._throwValidationError('notNegative')
                     );
                 }
                 return value;
@@ -151,7 +151,7 @@ class _Number extends Any {
                 if (value === 0) {
                     return (this._isCoercing
                         ? this._defaultValue
-                        : this._throwValidationFailure('nonZero')
+                        : this._throwValidationError('nonZero')
                     );
                 }
                 return value;
@@ -165,7 +165,7 @@ class _Number extends Any {
                 if (value % 2 !== 0) {
                     return (this._isCoercing
                         ? value - Math.sign(value)
-                        : this._throwValidationFailure('notEven')
+                        : this._throwValidationError('notEven')
                     );
                 }
                 return value;
@@ -179,7 +179,7 @@ class _Number extends Any {
                 if (value % 2 !== 1) {
                     return (this._isCoercing
                         ? value + (Math.sign(value) || 1)
-                        : this._throwValidationFailure('notOdd')
+                        : this._throwValidationError('notOdd')
                     );
                 }
                 return value;

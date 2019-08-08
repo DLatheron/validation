@@ -21,7 +21,7 @@ class _String extends Any {
             value => {
                 if (!this._coerceValue) {
                     if (typeof value !== 'string') {
-                        return this._throwValidationFailure('notAString');
+                        return this._throwValidationError('notAString');
                     }
                     return value;
                 } else {
@@ -33,7 +33,7 @@ class _String extends Any {
                             try {
                                 return JSON.stringify(value, null, this._coersionOptions.json.indent);
                             } catch (error) {
-                                return this._throwValidationFailure('cannotConvertObjectToJSON');
+                                return this._throwValidationError('cannotConvertObjectToJSON');
                             }
 
                         default:
@@ -50,7 +50,7 @@ class _String extends Any {
                 if (value.length === 0) {
                     return (this._isCoercing
                         ? this._defaultValue
-                        : this._throwValidationFailure('cannotBeEmpty')
+                        : this._throwValidationError('cannotBeEmpty')
                     );
                 }
                 return value;
@@ -64,7 +64,7 @@ class _String extends Any {
                 if (value.length < minLength) {
                     return (this._isCoercing
                         ? this._defaultValue
-                        : this._throwValidationFailure('tooShort')
+                        : this._throwValidationError('tooShort')
                     );
                 }
                 return value;
@@ -78,7 +78,7 @@ class _String extends Any {
                 if (value.length > maxLength) {
                     return (this._isCoercing
                         ? value.slice(0, maxLength)
-                        : this._throwValidationFailure('tooLong')
+                        : this._throwValidationError('tooLong')
                     );
                 }
                 return value;
@@ -93,7 +93,7 @@ class _String extends Any {
                 if (value.match(regex)) {
                     return (this._isCoercing
                         ? this._defaultValue
-                        : this._throwValidationFailure('containsNonAlphaCharacters')
+                        : this._throwValidationError('containsNonAlphaCharacters')
                     );
                 }
                 return value;
@@ -109,7 +109,7 @@ class _String extends Any {
                 if (value.match(regex)) {
                     return (this._isCoercing
                         ? this._defaultValue
-                        : this._throwValidationFailure('containsNonAlphaNumericCharacters')
+                        : this._throwValidationError('containsNonAlphaNumericCharacters')
                     );
                 }
                 return value;

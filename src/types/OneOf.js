@@ -27,7 +27,7 @@ class _OneOf extends Any {
                         return true;
                     }
                 })) {
-                    return this._throwValidationFailure(
+                    return this._throwValidationError(
                         'aggregateError',
                         { errors }
                     );

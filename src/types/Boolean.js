@@ -16,7 +16,7 @@ class _Boolean extends Any {
             value => {
                 if (!this._coerceValue) {
                     if (typeof value !== 'boolean') {
-                        return this._throwValidationFailure('notABoolean');
+                        return this._throwValidationError('notABoolean');
                     }
                     return value;
                 } else {
@@ -34,11 +34,11 @@ class _Boolean extends Any {
                                 case 'false': case '0': case 'no':
                                     return false;
                                 default :
-                                    return this._throwValidationFailure('cannotConvertStringToBoolean');
+                                    return this._throwValidationError('cannotConvertStringToBoolean');
                             }
 
                         default:
-                            return this._throwValidationFailure('unsupportedTypeForConversion');
+                            return this._throwValidationError('unsupportedTypeForConversion');
                     }
                 }
             }
@@ -49,7 +49,7 @@ class _Boolean extends Any {
         return this._register(
             value => {
                 if (value !== expectedValue) {
-                    return this._throwValidationFailure('notExpectedValue');
+                    return this._throwValidationError('notExpectedValue');
                 }
                 return value;
             }

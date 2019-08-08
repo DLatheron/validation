@@ -7,7 +7,7 @@ const Validate = require('../src/validation');
 // - Make required pull a validator in a position 0... then it will be
 //   required UNLESS coersion is enabled...
 
-describe('validation', () => {
+describe.skip('validation', () => {
     it('should allow the validation of number types', () => {
         const schema = Validate
             .Number()

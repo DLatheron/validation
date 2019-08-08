@@ -45,8 +45,6 @@ class ValidationError extends Error {
         }
 
         this.errors = errors;
-
-        this.resolve();
     }
 
     addPropertyName(propertyName) {
@@ -56,14 +54,6 @@ class ValidationError extends Error {
 
     get propertyName() {
         return this.propertyNames.join('.');
-    }
-
-    resolve() {
-        this.message = this.message || ValidationErrorTypes[this.errorType] || '';
-        if (this.propertyName) {
-            this.message = this.message.replace('{propertyName}', this.propertyName);
-        }
-        this.message = this.message.replace('{type}', this.type);
     }
 }
 

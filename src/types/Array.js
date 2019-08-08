@@ -21,7 +21,7 @@ class _Array extends Any {
             (value, next) => {
                 if (!Array.isArray(value)) {
                     if (!this._coerceValue) {
-                        return this._throwValidationFailure('notAnArray');
+                        return this._throwValidationError('notAnArray');
                     } else {
                         value = [value];
                     }
@@ -44,7 +44,7 @@ class _Array extends Any {
                 if (value.length === 0) {
                     return (this._isCoercing
                         ? this._defaultValue
-                        : this._throwValidationFailure('cannotBeEmpty')
+                        : this._throwValidationError('cannotBeEmpty')
                     );
                 }
                 return value;
@@ -58,7 +58,7 @@ class _Array extends Any {
                 if (value.length < minLength) {
                     return (this._isCoercing
                         ? this._defaultValue
-                        : this._throwValidationFailure('tooShort')
+                        : this._throwValidationError('tooShort')
                     );
                 }
                 return value;
@@ -72,7 +72,7 @@ class _Array extends Any {
                 if (value.length > maxLength) {
                     return (this._isCoercing
                         ? value.slice(0, maxLength)
-                        : this._throwValidationFailure('tooLong')
+                        : this._throwValidationError('tooLong')
                     );
                 }
                 return value;

@@ -18,7 +18,7 @@ class _Object extends Any {
                 if (!allowAdditionalProperties) {
                     for (const [propertyName] of Object.entries(value)) {
                         if (!contents[propertyName]) {
-                            return this._throwValidationFailure(
+                            return this._throwValidationError(
                                 'unexpectedProperty',
                                 { propertyName }
                             );
