@@ -22,8 +22,6 @@ class _OneOf extends Any {
     }
 
     isOneOf(subSchemas) {
-        // TODO: options must be an array.
-
         return this._register(
             value => {
                 const errors = [];
@@ -37,9 +35,12 @@ class _OneOf extends Any {
                         return true;
                     }
                 })) {
-                    return this._throwValidationError(
-                        'aggregateError',
-                        { errors }
+                    return (this._isCoercing
+                        ? this._defaultValue
+                        : this._throwValidationError(
+                            'subSchemaFailure',
+                            { errors }
+                        )
                     );
                 }
 
