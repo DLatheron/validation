@@ -23,7 +23,6 @@ class SchemaError extends Error {
 
     addPropertyName(propertyName) {
         this.propertyNames.unshift(propertyName);
-        this.resolve();
     }
 
     get propertyName() {
