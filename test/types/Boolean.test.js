@@ -3,24 +3,26 @@
 const _Boolean = require('../../src/types/Boolean');
 
 describe('Boolean', () => {
-    let _boolean;
-
     beforeEach(() => {
         jest.spyOn(_Boolean.prototype, 'isBoolean');
-
-        _boolean = new _Boolean();
     });
 
     describe('constructor', () => {
         it('should set the type to be "boolean"', () => {
+            const _boolean = new _Boolean();
+
             expect(_boolean._type).toBe('boolean');
         });
 
         it('should set the default value to be false', () => {
+            const _boolean = new _Boolean();
+
             expect(_boolean._defaultValue).toBe(false);
         });
 
         it('should register the "isBoolean" validation', () => {
+            const _boolean = new _Boolean();
+
             expect(_boolean.isBoolean).toHaveBeenCalledTimes(1);
         });
     });
@@ -28,20 +30,23 @@ describe('Boolean', () => {
     describe('isBoolean', () => {
         describe('validation', () => {
             it('should continue if passed a valid boolean', () => {
+                const _boolean = new _Boolean();
+
                 expect(_boolean.validate(true)).toBe(true);
             });
 
             it('should throw if the value passed is not a boolean', () => {
+                const _boolean = new _Boolean();
+
                 expect(() => _boolean.validate(1)).toThrow('notABoolean');
             });
         });
 
         describe('coersion', () => {
-            beforeEach(() => {
-                _boolean = new _Boolean().coerce();
-            });
-
             it('should continue if passed a valid boolean', () => {
+                const _boolean = new _Boolean()
+                    .coerce();
+
                 expect(_boolean.validate(false)).toBe(false);
             });
 
@@ -70,6 +75,9 @@ describe('Boolean', () => {
             ])(
                 'successful coersions', ({ value, expectedValue }) => {
                     it(`should coerce ${typeof value} === "${value}" to a boolean === ${expectedValue}`, () => {
+                        const _boolean = new _Boolean()
+                            .coerce();
+
                         expect(_boolean.validate(value)).toBe(expectedValue);
                     });
                 });
@@ -83,6 +91,9 @@ describe('Boolean', () => {
             ])(
                 'failed coersions', ({ value, expectedError }) => {
                     it(`should not coerce ${typeof value} === "${value}"`, () => {
+                        const _boolean = new _Boolean()
+                            .coerce();
+
                         expect(() => _boolean.validate(value)).toThrow(expectedError);
                     });
                 }
@@ -96,11 +107,10 @@ describe('Boolean', () => {
             { value: false }
         ])(
             'successful matches', ({ value }) => {
-                beforeEach(() => {
-                    _boolean = new _Boolean().is(value);
-                });
-
                 it(`should continue if value is ${value}`, () => {
+                    const _boolean = new _Boolean()
+                        .is(value);
+
                     expect(_boolean.validate(value)).toBe(value);
                 });
             }
@@ -111,11 +121,10 @@ describe('Boolean', () => {
             { value: false, is: true }
         ])(
             'failed matches', ({ value, is }) => {
-                beforeEach(() => {
-                    _boolean = new _Boolean().is(is);
-                });
-
                 it(`should throw if value is not ${value}`, () => {
+                    const _boolean = new _Boolean()
+                        .is(is);
+
                     expect(() => _boolean.validate(value)).toThrow('notExpectedValue');
                 });
             }

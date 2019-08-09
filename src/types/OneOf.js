@@ -1,24 +1,34 @@
 'use strict';
 
 const Any = require('./Any');
+const { isArray } = require('lodash');
 
 class _OneOf extends Any {
-    constructor(options) {
+    constructor(subSchemas) {
         super('oneOf');
 
-        this._defaultValue = options[0].defaultValue;
+        if (!isArray(subSchemas)) {
+            return this._throwSchemaError('notAnArrayOfSchemas');
+        }
+        if (!subSchemas.every(option =>
+            option instanceof Any
+        )) {
+            return this._throwSchemaError('mustBeASchema');
+        }
 
-        return this.oneOf(options);
+        this._defaultValue = subSchemas[0]._defaultValue;
+
+        return this.isOneOf(subSchemas);
     }
 
-    oneOf(schemaOptions) {
+    isOneOf(subSchemas) {
         // TODO: options must be an array.
 
         return this._register(
             value => {
                 const errors = [];
 
-                if (schemaOptions.every(schema => {
+                if (subSchemas.every(schema => {
                     try {
                         schema.validate(value);
                         return false;
