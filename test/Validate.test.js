@@ -1,6 +1,6 @@
 'use strict';
 
-const Validate = require('../src/validation');
+const Validate = require('../src/Validate');
 
 // TODO: How do we get the list of errors back???
 // - Get back a list of properties that fail (depth-wise);

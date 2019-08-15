@@ -295,14 +295,9 @@ describe('Any', () => {
 
     describe('_throwSchemaError', () => {
         let reason;
-        let additionalProperties;
 
         beforeEach(() => {
             reason = 'An error occurred';
-            additionalProperties = {
-                propertyName: 'propertyName',
-                errors: ['Some sub-errors']
-            };
         });
 
         it('should throw the passed reason', () => {
@@ -314,14 +309,6 @@ describe('Any', () => {
                 _any._throwSchemaError(reason);
             } catch (error) {
                 expect(error).toBeInstanceOf(SchemaError);
-            }
-        });
-
-        it('should include any additional properties', () => {
-            try {
-                _any._throwSchemaError(reason, additionalProperties);
-            } catch (error) {
-                expect(error).toMatchObject(additionalProperties);
             }
         });
     });

@@ -6,27 +6,11 @@ const SchemaErrorTypes = {
 };
 
 class SchemaError extends Error {
-    constructor(errorType, { type, propertyName, errors } = {}) {
+    constructor(errorType) {
         super(errorType);
 
         this.errorType = errorType;
-        this.type = type;
         this.string = SchemaErrorTypes[errorType];
-
-        this.propertyNames = [];
-        if (propertyName) {
-            this.propertyNames.push(propertyName);
-        }
-
-        this.errors = errors;
-    }
-
-    addPropertyName(propertyName) {
-        this.propertyNames.unshift(propertyName);
-    }
-
-    get propertyName() {
-        return this.propertyNames.join('.');
     }
 }
 

@@ -106,10 +106,8 @@ class Any {
         });
     }
 
-    _throwSchemaError(reason, additionalProperties) {
-        throw new SchemaError(reason, {
-            ...additionalProperties
-        });
+    _throwSchemaError(reason) {
+        throw new SchemaError(reason);
     }
 
     get _isCoercing() {

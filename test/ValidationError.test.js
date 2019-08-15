@@ -3,21 +3,29 @@
 const { ValidationError } = require('../src/ValidationError');
 
 describe('ValidationError', () => {
-    const errors = [
-        { errorType: 'unexpectedProperty', propertyName: 'age', expectedMessage: 'Unexpected property' }
-    ];
+    describe('constructor', () => {
+        it('should set the error message', () => {
+            const _error = new ValidationError('message');
 
-    describe.each(errors)(
-        'should generate an appropriate error message for',
-        ({ errorType, type, propertyName, expectedMessage }) => {
-            it(`${type}`, () => {
-                const error = new ValidationError(errorType, {
-                    type,
-                    propertyName
-                });
+            expect(_error.message).toBe('message');
+        });
 
-                expect(error.string).toStrictEqual(expectedMessage);
-            });
-        }
-    );
+        it('should set the error type', () => {
+            const _error = new ValidationError('message');
+
+            expect(_error.errorType).toBe('message');
+        });
+
+        it('should set the type', () => {
+            const _error = new ValidationError('message', { type: 'type' });
+
+            expect(_error.type).toBe('type');
+        });
+
+        it('should lookup and store the text of the error type', () => {
+            const _error = new ValidationError('cannotBeEmpty');
+
+            expect(_error.string).toBe('Cannot be empty');
+        });
+    });
 });
