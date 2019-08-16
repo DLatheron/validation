@@ -2,6 +2,15 @@
 
 const Any = require('./Any');
 
+// TODO:
+// - length(x);
+// - ordered(byProperty);
+// - unique();
+// - excludes();
+// - known();
+// - unknown();
+// - notSparse();
+
 class _Array extends Any {
     constructor(elementSchema) {
         if (!elementSchema) {

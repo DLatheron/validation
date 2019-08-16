@@ -2,6 +2,32 @@
 
 const Any = require('./Any');
 
+// TODO:
+// - base64;
+// - creditCard;
+// - dataUri;
+// - domain;
+// - email;
+// - guid;
+// - hex;
+// - hexAligned(x) - Hex value must be aligned to x bytes;
+// - hostname;
+// - ipv4;
+// - ipv6;
+// - ipv(4|6);
+// - isoDate;
+// - isoDuration;
+// - lowercase;
+// - uppercase;
+// - normalize???
+// - token;
+// - pattern;
+// - truncate;
+// - trim;
+// - uri;
+// - uriRelative;
+// - uppercase;
+
 class _String extends Any {
     constructor() {
         super('string');

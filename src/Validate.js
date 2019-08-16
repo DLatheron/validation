@@ -7,6 +7,24 @@
 // - Server and client based so that it can be shared easily;
 // -
 
+// TODO:
+// - binary;
+// - date;
+//   - format;
+//   - greaterThan;
+//   - lessThan;
+//   - min;
+//   - max;
+//   - iso;
+//   - js;
+//   - unix timestamp.
+// - time???
+// - function
+//   - arity;
+//   - minArity;
+//   - maxArity;
+//   - class;
+
 const _Array = require('./types/Array');
 const _Boolean = require('./types/Boolean');
 const _Number = require('./types/Number');

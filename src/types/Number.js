@@ -4,7 +4,13 @@ const Any = require('./Any');
 const { isFinite } = require('lodash');
 
 // TODO:
-// - Support for conversion from a particular base.
+// - base();
+// - lessThan();
+// - greaterThan();
+// - multiple();
+// - port();
+// - precision();
+// - safe() ?!?!?!?!
 
 class _Number extends Any {
     constructor() {
