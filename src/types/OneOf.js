@@ -1,13 +1,12 @@
 'use strict';
 
 const Any = require('./Any');
-const { isArray } = require('lodash');
 
 class _OneOf extends Any {
     constructor(subSchemas) {
         super('oneOf');
 
-        if (!isArray(subSchemas)) {
+        if (!Array.isArray(subSchemas)) {
             return this._throwSchemaError('notAnArrayOfSchemas');
         }
         if (!subSchemas.every(option =>
