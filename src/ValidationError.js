@@ -1,5 +1,7 @@
 'use strict';
 
+const { flatten } = require('lodash');
+
 const ValidationErrorTypes = {
     notAString: 'Not a string',
     notAnArray: 'Not an array',
@@ -53,6 +55,14 @@ class ValidationError extends Error {
 
     get propertyName() {
         return this.propertyNames.join('.');
+    }
+
+    get errorTypes() {
+        if (this.errors) {
+            return flatten(this.errors.map(subError => subError.errorTypes));
+        } else {
+            return [this.errorType];
+        }
     }
 }
 

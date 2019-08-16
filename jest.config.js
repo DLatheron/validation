@@ -132,9 +132,9 @@ module.exports = {
     // ],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
-    // setupFilesAfterEnv: [
-    //     './test/setup/silentLogger.js'
-    // ],
+    setupFilesAfterEnv: [
+        './test/setup/globalSetup.js'
+    ],
 
     // A list of paths to snapshot serializer modules Jest should use for snapshot testing
     // snapshotSerializers: [],
