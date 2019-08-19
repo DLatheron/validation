@@ -304,6 +304,49 @@ describe('Number', () => {
             });
     });
 
+    describe('port', () => {
+        describe.each([
+            { value: 0, expectedError: 'tooLow' },
+            { value: 65536, expectedError: 'tooHigh' },
+            { value: 1 },
+            { value: 32768 },
+            { value: 65535 }
+        ])(
+            'validations', ({ value, expectedError }) => {
+                it((expectedError
+                    ? `should throw an error if passed a value of ${value}`
+                    : `should continue if passed a value of ${value}`
+                ), () => {
+                    const _number = new _Number()
+                        .port();
+
+                    expectedError
+                        ? expect(() => _number.validate(value)).toThrow(expectedError)
+                        : expect(_number.validate(value)).toBe(value);
+                });
+            });
+
+        describe.each([
+            { value: 0, expectedValue: 1 },
+            { value: 65536, expectedValue: 65535 },
+            { value: 1 },
+            { value: 32768 },
+            { value: 65535 }
+        ])(
+            'coersions', ({ value, expectedValue }) => {
+                it((expectedValue
+                    ? `should clamp the passed value of ${value}`
+                    : `should continue if passed a value of ${value}`
+                ), () => {
+                    const _number = new _Number()
+                        .port()
+                        .coerce();
+
+                    expect(_number.validate(value)).toBe(expectedValue || value);
+                });
+            });
+    });
+
     describe('positive', () => {
         describe('validation', () => {
             it('should continue if the value is positive', () => {

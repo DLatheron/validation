@@ -103,25 +103,9 @@ class _Number extends Any {
         );
     }
 
-    // TODO: Replace with an Any.Or function that evaluates multiple ranges?
-    //       How would that work with coersion? How would this work with coersion?
-    // ranges(ranges) {
-    //     return this._register(
-    //         value => {
-    //             if (!ranges.some(range => {
-    //                 if (range.min !== undefined && value < range.min) {
-    //                     return false;
-    //                 } else if (range.max !== undefined && value > range.max) {
-    //                     return false;
-    //                 }
-    //                 return true;
-    //             })) {
-    //                 this._throwValidationError('notInRange');
-    //             }
-    //             return value;
-    //         }
-    //     );
-    // }
+    port() {
+        return this.range({ min: 1, max: 65535 });
+    }
 
     positive() {
         return this._register(
