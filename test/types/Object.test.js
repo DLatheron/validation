@@ -176,7 +176,7 @@ describe('Object', () => {
                     expect(_object._coersionOptions.json.convert).toBe(false);
                 });
 
-                it('should throw an error if JSON parsing fails', () => {
+                it('should return the default value if JSON parsing fails', () => {
                     const _object = new _Object()
                         .coerce({ json: { convert: true } })
                         .default('defaultValue');

@@ -7,6 +7,7 @@ const ValidationErrorTypes = {
     notAnArray: 'Not an array',
     notABoolean: 'Not a boolean',
     notANumber: 'Not a number',
+    notAFunction: ' Not a function',
     cannotBeEmpty: 'Cannot be empty',
     tooShort: 'Too short',
     tooLong: 'Too long',
@@ -30,7 +31,9 @@ const ValidationErrorTypes = {
     notExpectedValue: 'Not equal to the expected value',
     cannotConvertObjectToJSON: 'Cannot convert object into JSON string',
     cannotConvertToString: 'Cannot convert value into a string',
-    cannotConvertToNumber: 'Cannot convert value into a number'
+    cannotConvertToNumber: 'Cannot convert value into a number',
+    arityTooLow: 'Too few arguments',
+    arityTooHigh: 'Too many arguments'
 };
 
 class ValidationError extends Error {
