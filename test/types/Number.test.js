@@ -59,7 +59,8 @@ describe('Number', () => {
             ])(
                 'successful coersions', ({ value, expectedValue }) => {
                     it(`should coerce ${typeof value} === "${value}" to a number === ${expectedValue}`, () => {
-                        const _number = new _Number().coerce();
+                        const _number = new _Number()
+                            .coerce();
 
                         expect(_number.validate(value)).toBe(expectedValue);
                     });

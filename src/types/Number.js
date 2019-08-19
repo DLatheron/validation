@@ -5,8 +5,8 @@ const { isFinite } = require('lodash');
 
 // TODO:
 // - base();
-// - lessThan();
-// - greaterThan();
+// x lessThan();
+// x greaterThan();
 // - multiple();
 // x port();
 // - precision();
