@@ -202,6 +202,148 @@ describe('Number', () => {
         });
     });
 
+    describe('greaterThan', () => {
+        const minValue = 12;
+        const equalTo = minValue;
+        const lessThan = 11;
+        const greaterThan = 13;
+        const threshold = 0.01;
+
+        describe('validation', () => {
+            it('should continue if the value is greater than the number', () => {
+                const _number = new _Number()
+                    .greaterThan(minValue);
+
+                expect(_number.validate(greaterThan)).toBe(greaterThan);
+            });
+
+            it('should throw if the value is equal to the number', () => {
+                const _number = new _Number()
+                    .greaterThan(minValue);
+
+                expect(() => _number.validate(equalTo)).toThrow('tooLow');
+            });
+
+            it('should throw if the value is less than the number', () => {
+                const _number = new _Number()
+                    .greaterThan(minValue);
+
+                expect(() => _number.validate(lessThan)).toThrow('tooLow');
+            });
+        });
+
+        describe('coersion', () => {
+            it('should continue if the value is greater than the number', () => {
+                const _number = new _Number()
+                    .greaterThan(minValue)
+                    .coerce();
+
+                expect(_number.validate(greaterThan)).toBe(greaterThan);
+            });
+
+            it('should return the default value if the value is equal to the number', () => {
+                const _number = new _Number()
+                    .greaterThan(minValue, threshold)
+                    .coerce();
+
+                expect(_number.validate(equalTo)).toBe(minValue + threshold);
+            });
+
+            it('should return the default value if the value is less than the number', () => {
+                const _number = new _Number()
+                    .greaterThan(minValue, threshold)
+                    .coerce();
+
+                expect(_number.validate(lessThan)).toBe(minValue + threshold);
+            });
+
+            describe.each([
+                { value: lessThan, threshold: 10, expectedValue: minValue + 10 },
+                { value: lessThan, threshold: 1, expectedValue: minValue + 1 },
+                { value: lessThan, expectedValue: minValue + 0.1 },
+                { value: lessThan, threshold: 0.01, expectedValue: minValue + 0.01 },
+                { value: lessThan, threshold: 0.001, expectedValue: minValue + 0.001 }
+            ])(
+                'variable thresholding',
+                ({ value, threshold, expectedValue }) => {
+                    it(`should clamp the value appropriately when threshold is ${threshold || 'default'}`, () => {
+                        const _number = new _Number()
+                            .greaterThan(minValue, threshold)
+                            .coerce();
+
+                        expect(_number.validate(value)).toBe(expectedValue);
+                    });
+                });
+        });
+    });
+
+    describe('lessThan', () => {
+        const maxValue = 12;
+        const equalTo = maxValue;
+        const lessThan = 11;
+        const greaterThan = 13;
+        const threshold = 0.01;
+
+        describe('validation', () => {
+            it('should continue if the value is less than the number', () => {
+                const _number = new _Number()
+                    .lessThan(maxValue);
+
+                expect(_number.validate(lessThan)).toBe(lessThan);
+            });
+
+            it('should throw if the value is equal to the number', () => {
+                const _number = new _Number()
+                    .lessThan(maxValue);
+
+                expect(() => _number.validate(equalTo)).toThrow('tooHigh');
+            });
+
+            it('should throw if the value is greater than the number', () => {
+                const _number = new _Number()
+                    .lessThan(maxValue);
+
+                expect(() => _number.validate(greaterThan)).toThrow('tooHigh');
+            });
+        });
+
+        describe('coersion', () => {
+            it('should continue if the value is less than the number', () => {
+                const _number = new _Number()
+                    .lessThan(maxValue, threshold)
+                    .coerce();
+
+                expect(_number.validate(lessThan)).toBe(lessThan);
+            });
+
+            it('should return the clamped value if the value is equal to the number', () => {
+                const _number = new _Number()
+                    .lessThan(maxValue, threshold)
+                    .coerce();
+
+                expect(_number.validate(equalTo)).toBe(maxValue - threshold);
+            });
+
+            describe.each([
+                { value: greaterThan, threshold: 10, expectedValue: maxValue - 10 },
+                { value: greaterThan, threshold: 1, expectedValue: maxValue - 1 },
+                { value: greaterThan, expectedValue: maxValue - 0.1 },
+                { value: greaterThan, threshold: 0.01, expectedValue: maxValue - 0.01 },
+                { value: greaterThan, threshold: 0.001, expectedValue: maxValue - 0.001 }
+            ])(
+                'variable thresholding',
+                ({ value, threshold, expectedValue }) => {
+                    it(`should clamp the value appropriately when threshold is ${threshold || 'default'}`, () => {
+                        const _number = new _Number()
+                            .lessThan(maxValue, threshold)
+                            .coerce();
+
+                        expect(_number.validate(value)).toBe(expectedValue);
+                    });
+                });
+        });
+    });
+
     describe('range', () => {
         const min = 100;
         const max = 200;

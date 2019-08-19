@@ -8,7 +8,7 @@ const { isFinite } = require('lodash');
 // - lessThan();
 // - greaterThan();
 // - multiple();
-// - port();
+// x port();
 // - precision();
 // - safe() ?!?!?!?!
 
@@ -79,6 +79,36 @@ class _Number extends Any {
                         : this._throwValidationError('tooHigh')
                     );
                 }
+                return value;
+            }
+        );
+    }
+
+    greaterThan(min, minThreshold = 0.1) {
+        return this._register(
+            value => {
+                if (value <= min) {
+                    return (this._isCoercing
+                        ? min + minThreshold
+                        : this._throwValidationError('tooLow')
+                    );
+                }
+
+                return value;
+            }
+        );
+    }
+
+    lessThan(max, maxThreshold = 0.1) {
+        return this._register(
+            value => {
+                if (value >= max) {
+                    return (this._isCoercing
+                        ? max - maxThreshold
+                        : this._throwValidationError('tooHigh')
+                    );
+                }
+
                 return value;
             }
         );
