@@ -285,21 +285,21 @@ describe('String', () => {
         });
     });
 
-    describe('alphanum', () => {
+    describe('alphaNum', () => {
         const alphaNumCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         const nonAlphaNumCharacters = 'aA0&*@';
 
         describe('validation', () => {
             it('should continue if the value contains only alpha numeric characters', () => {
                 const _string = new _String()
-                    .alphanum();
+                    .alphaNum();
 
                 expect(_string.validate(alphaNumCharacters)).toBe(alphaNumCharacters);
             });
 
             it('should throw if the value contains non-alpha numeric characters', () => {
                 const _string = new _String()
-                    .alphanum();
+                    .alphaNum();
 
                 expect(() => _string.validate(nonAlphaNumCharacters)).toThrow('containsNonAlphaNumericCharacters');
             });
@@ -308,7 +308,7 @@ describe('String', () => {
         describe('coersion', () => {
             it('should continue if the value contains only alpha numeric characters', () => {
                 const _string = new _String()
-                    .alphanum()
+                    .alphaNum()
                     .coerce()
                     .default('defaultValue');
 
@@ -317,7 +317,7 @@ describe('String', () => {
 
             it('should coerce the value containing non-alpha numeric characters by replacing it with the default value', () => {
                 const _string = new _String()
-                    .alphanum()
+                    .alphaNum()
                     .coerce()
                     .default('defaultValue');
 

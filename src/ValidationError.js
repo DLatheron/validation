@@ -25,7 +25,7 @@ const ValidationErrorTypes = {
     aggregateError: 'Aggregate Error',
     required: 'Required value not specified',
     containsNonAlphaCharacters: 'Contains non-alpha characters',
-    containsNonAlphaNumericCharacters: 'Contains non-alphanumeric characters',
+    containsNonAlphaNumericCharacters: 'Contains non-alpha-numeric characters',
     cannotConvertStringToBoolean: 'Cannot convert string into a boolean',
     unsupportedTypeForConversion: 'Unsupported type for conversion',
     notExpectedValue: 'Not equal to the expected value',

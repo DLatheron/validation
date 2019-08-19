@@ -127,8 +127,7 @@ class _String extends Any {
         );
     }
 
-    // TODO: alphanum or alphaNum?
-    alphanum() {
+    alphaNum() {
         return this._register(
             value => {
                 const regex = /[^a-zA-Z0-9]/;
