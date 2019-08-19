@@ -49,11 +49,22 @@ class _Boolean extends Any {
         return this._register(
             value => {
                 if (value !== expectedValue) {
-                    return this._throwValidationError('notExpectedValue');
+                    return (this._isCoercing
+                        ? !value
+                        : this._throwValidationError('notExpectedValue')
+                    );
                 }
                 return value;
             }
         );
+    }
+
+    true() {
+        return this.is(true);
+    }
+
+    false() {
+        return this.is(false);
     }
 }
 

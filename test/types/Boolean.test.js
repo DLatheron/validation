@@ -102,32 +102,110 @@ describe('Boolean', () => {
     });
 
     describe('is', () => {
-        describe.each([
-            { value: true },
-            { value: false }
-        ])(
-            'successful matches', ({ value }) => {
-                it(`should continue if value is ${value}`, () => {
-                    const _boolean = new _Boolean()
-                        .is(value);
+        describe('validation', () => {
+            describe.each([
+                { value: true },
+                { value: false }
+            ])(
+                'successful matches', ({ value }) => {
+                    it(`should continue if value is ${value}`, () => {
+                        const _boolean = new _Boolean()
+                            .is(value);
 
-                    expect(_boolean.validate(value)).toBe(value);
-                });
-            }
-        );
+                        expect(_boolean.validate(value)).toBe(value);
+                    });
+                }
+            );
 
-        describe.each([
-            { value: true, is: false },
-            { value: false, is: true }
-        ])(
-            'failed matches', ({ value, is }) => {
-                it(`should throw if value is not ${value}`, () => {
-                    const _boolean = new _Boolean()
-                        .is(is);
+            describe.each([
+                { value: true, is: false },
+                { value: false, is: true }
+            ])(
+                'failed matches', ({ value, is }) => {
+                    it(`should throw if value is not ${value}`, () => {
+                        const _boolean = new _Boolean()
+                            .is(is);
 
-                    expect(() => _boolean.validate(value)).toThrow('notExpectedValue');
-                });
-            }
-        );
+                        expect(() => _boolean.validate(value)).toThrow('notExpectedValue');
+                    });
+                }
+            );
+        });
+
+        describe('coersion', () => {
+            // TODO:
+        });
+    });
+
+    describe('true', () => {
+        describe('validation', () => {
+            it(`should continue if value is true`, () => {
+                const _boolean = new _Boolean()
+                    .true();
+
+                expect(_boolean.validate(true)).toBe(true);
+            });
+
+            it(`should throw if value is not true`, () => {
+                const _boolean = new _Boolean()
+                    .true();
+
+                expect(() => _boolean.validate(false)).toThrow('notExpectedValue');
+            });
+        });
+
+        describe('coersion', () => {
+            it(`should continue if value is true`, () => {
+                const _boolean = new _Boolean()
+                    .true()
+                    .coerce();
+
+                expect(_boolean.validate(true)).toBe(true);
+            });
+
+            it(`should return true if the value is false`, () => {
+                const _boolean = new _Boolean()
+                    .true()
+                    .coerce();
+
+                expect(_boolean.validate(false)).toBe(true);
+            });
+        });
+    });
+
+    describe('false', () => {
+        describe('validation', () => {
+            it(`should continue if value is true`, () => {
+                const _boolean = new _Boolean()
+                    .false();
+
+                expect(_boolean.validate(false)).toBe(false);
+            });
+
+            it(`should throw if value is not true`, () => {
+                const _boolean = new _Boolean()
+                    .false();
+
+                expect(() => _boolean.validate(true)).toThrow('notExpectedValue');
+            });
+        });
+
+        describe('coersion', () => {
+            it(`should continue if value is false`, () => {
+                const _boolean = new _Boolean()
+                    .false()
+                    .coerce();
+
+                expect(_boolean.validate(false)).toBe(false);
+            });
+
+            it(`should return true if the value is false`, () => {
+                const _boolean = new _Boolean()
+                    .false()
+                    .coerce();
+
+                expect(_boolean.validate(true)).toBe(false);
+            });
+        });
     });
 });
