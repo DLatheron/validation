@@ -23,7 +23,7 @@ const Any = require('./Any');
 // - token;
 // - pattern;
 // - truncate;
-// - trim;
+// x trim;
 // - uri;
 // - uriRelative;
 // - uppercase;
@@ -136,6 +136,49 @@ class _String extends Any {
                         ? this._defaultValue
                         : this._throwValidationError('containsNonAlphaNumericCharacters')
                     );
+                }
+                return value;
+            }
+        );
+    }
+
+    // TODO: Current behaviour is to coerce ANY string that needs trimming - ALWAYS.
+    trim(coerce) {
+        return this._register(
+            value => {
+                const trimmed = value.trim();
+                if (trimmed !== value) {
+                    return (this._isCoercing || coerce
+                        ? trimmed
+                        : this._throwValidationError('needsTrimming'));
+                }
+                return value.trim();
+            }
+        );
+    }
+
+    upperCase(coerce) {
+        return this._register(
+            value => {
+                const upperCase = value.toUpperCase();
+                if (value !== upperCase) {
+                    return (this._isCoercing || coerce
+                        ? upperCase
+                        : this._throwValidationError('notUpperCase'));
+                }
+                return value;
+            }
+        );
+    }
+
+    lowerCase(coerce) {
+        return this._register(
+            value => {
+                const lowerCase = value.toLowerCase();
+                if (value !== lowerCase) {
+                    return (this._isCoercing || coerce
+                        ? lowerCase
+                        : this._throwValidationError('notLowerCase'));
                 }
                 return value;
             }

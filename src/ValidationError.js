@@ -33,7 +33,10 @@ const ValidationErrorTypes = {
     cannotConvertToString: 'Cannot convert value into a string',
     cannotConvertToNumber: 'Cannot convert value into a number',
     arityTooLow: 'Too few arguments',
-    arityTooHigh: 'Too many arguments'
+    arityTooHigh: 'Too many arguments',
+    needsTrimming: 'Needs trimming',
+    notUpperCase: 'Not upper case',
+    notLowerCase: 'Not lower case'
 };
 
 class ValidationError extends Error {

@@ -7,6 +7,9 @@
 // - Server and client based so that it can be shared easily;
 // -
 
+// TODO: We could remove the global coerce and make it so that we have a local coerce... together
+//       with a passed object for the coersion???
+
 // TODO:
 // - binary;
 // - date;

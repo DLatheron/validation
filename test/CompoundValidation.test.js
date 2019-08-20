@@ -4,7 +4,7 @@ const Validate = require('../src/Validate');
 
 describe('Compound Validation', () => {
     describe('String', () => {
-        it('should compound validation of string', () => {
+        it('should allow compound validation of string', () => {
             const schema = Validate
                 .String()
                 .notEmpty()
@@ -15,6 +15,15 @@ describe('Compound Validation', () => {
             expect(() => schema.validate('')).toThrow('cannotBeEmpty');
             expect(() => schema.validate('01234567890123456789+')).toThrow('tooLong');
         });
+
+        // it('what would per function coersion look like?', () => {
+        //     const schema = Validate
+        //         .String()
+        //         .notEmpty({ defaultValue: ' ' })
+        //         .maxLength({ coerce: true });
+
+        //     expect(schema.valudate('').toStrictEqual(' '));
+        // });
     });
 
     describe('OneOf', () => {

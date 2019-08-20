@@ -9,36 +9,36 @@ describe('String', () => {
 
     describe('constructor', () => {
         it('should set the type to be "string"', () => {
-            const _string = new _String();
+            const _schema = new _String();
 
-            expect(_string._type).toBe('string');
+            expect(_schema._type).toBe('string');
         });
 
         it('should set the default value to be the empty string', () => {
-            const _string = new _String();
+            const _schema = new _String();
 
-            expect(_string._defaultValue).toBe('');
+            expect(_schema._defaultValue).toBe('');
         });
 
         it('should register the "isString" validation', () => {
-            const _string = new _String();
+            const _schema = new _String();
 
-            expect(_string.isString).toHaveBeenCalledTimes(1);
+            expect(_schema.isString).toHaveBeenCalledTimes(1);
         });
     });
 
     describe('isString', () => {
         describe('validation', () => {
             it('should continue if passed a valid string', () => {
-                const _string = new _String();
+                const _schema = new _String();
 
-                _string.validate('a valid string');
+                _schema.validate('a valid string');
             });
 
             it('should throw if the value passed is not a string', () => {
-                const _string = new _String();
+                const _schema = new _String();
 
-                expect(() => _string.validate(12)).toThrow('notAString');
+                expect(() => _schema.validate(12)).toThrow('notAString');
             });
         });
 
@@ -59,10 +59,10 @@ describe('String', () => {
             ])(
                 'successful coersions', ({ value, expectedValue }) => {
                     it(`should coerce ${typeof value} === "${value}" to a string === ${expectedValue}`, () => {
-                        const _string = new _String()
+                        const _schema = new _String()
                             .coerce();
 
-                        expect(_string.validate(value)).toBe(expectedValue);
+                        expect(_schema.validate(value)).toBe(expectedValue);
                     });
                 });
 
@@ -79,12 +79,12 @@ describe('String', () => {
                 });
 
                 it('should throw an error if parsing fails', () => {
-                    const _string = new _String()
+                    const _schema = new _String()
                         .coerce();
 
                     JSON.stringify.mockImplementation(() => { throw Error('JSON parsing errored for some reason'); });
 
-                    expect(() => _string.validate({})).toThrow('cannotConvertObjectToJSON');
+                    expect(() => _schema.validate({})).toThrow('cannotConvertObjectToJSON');
                 });
             });
         });
@@ -93,37 +93,37 @@ describe('String', () => {
     describe('notEmpty', () => {
         describe('validation', () => {
             it('should continue if passed a non-empty string', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .notEmpty();
 
-                _string.validate('not empty');
+                _schema.validate('not empty');
             });
 
             it('should throw if the value passed is an empty string', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .notEmpty();
 
-                expect(() => _string.validate('')).toThrow('cannotBeEmpty');
+                expect(() => _schema.validate('')).toThrow('cannotBeEmpty');
             });
         });
 
         describe('coersion', () => {
             it('should continue if passed a non-empty string', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .notEmpty()
                     .coerce()
                     .default('defaultValue');
 
-                expect(_string.validate('not empty')).toBe('not empty');
+                expect(_schema.validate('not empty')).toBe('not empty');
             });
 
             it('should coerce the value of an empty string by replacing it with the default value', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .notEmpty()
                     .coerce()
                     .default('defaultValue');
 
-                expect(_string.validate('')).toBe('defaultValue');
+                expect(_schema.validate('')).toBe('defaultValue');
             });
         });
     });
@@ -135,53 +135,53 @@ describe('String', () => {
 
         describe('validation', () => {
             it('should continue if the value is the minimum length', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .minLength(4);
 
-                expect(_string.validate(correctLengthString)).toBe(correctLengthString);
+                expect(_schema.validate(correctLengthString)).toBe(correctLengthString);
             });
 
             it('should continue if the value is longer than the minimum length', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .minLength(4);
 
-                expect(_string.validate(longString)).toBe(longString);
+                expect(_schema.validate(longString)).toBe(longString);
             });
 
             it('should throw if the value is shorter than the minimum length', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .minLength(4);
 
-                expect(() => _string.validate(tooShortString)).toThrow('tooShort');
+                expect(() => _schema.validate(tooShortString)).toThrow('tooShort');
             });
         });
 
         describe('coersion', () => {
             it('should continue if the value is the minimum length', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .minLength(4)
                     .coerce()
                     .default('defaultValue');
 
-                expect(_string.validate(correctLengthString)).toBe(correctLengthString);
+                expect(_schema.validate(correctLengthString)).toBe(correctLengthString);
             });
 
             it('should continue if the value is longer than the minimum length', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .minLength(4)
                     .coerce()
                     .default('defaultValue');
 
-                expect(_string.validate(longString)).toBe(longString);
+                expect(_schema.validate(longString)).toBe(longString);
             });
 
             it('should coerce the value that is too short by replacing it with the default value', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .minLength(4)
                     .coerce()
                     .default('defaultValue');
 
-                expect(_string.validate(tooShortString)).toBe('defaultValue');
+                expect(_schema.validate(tooShortString)).toBe('defaultValue');
             });
         });
     });
@@ -193,53 +193,53 @@ describe('String', () => {
 
         describe('validation', () => {
             it('should continue if the value is the maximum length', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .maxLength(4);
 
-                expect(_string.validate(correctLengthString)).toBe(correctLengthString);
+                expect(_schema.validate(correctLengthString)).toBe(correctLengthString);
             });
 
             it('should continue if the value is shorter than the maximum length', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .maxLength(4);
 
-                expect(_string.validate(shortString)).toBe(shortString);
+                expect(_schema.validate(shortString)).toBe(shortString);
             });
 
             it('should throw if the value is longer the maximum length', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .maxLength(4);
 
-                expect(() => _string.validate(tooLongString)).toThrow('tooLong');
+                expect(() => _schema.validate(tooLongString)).toThrow('tooLong');
             });
         });
 
         describe('coersion', () => {
             it('should continue if the value is the maximum length', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .maxLength(4)
                     .coerce()
                     .default('defaultValue');
 
-                expect(_string.validate(correctLengthString)).toBe(correctLengthString);
+                expect(_schema.validate(correctLengthString)).toBe(correctLengthString);
             });
 
             it('should continue if the value is shorter than the maximum length', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .maxLength(4)
                     .coerce()
                     .default('defaultValue');
 
-                expect(_string.validate(shortString)).toBe(shortString);
+                expect(_schema.validate(shortString)).toBe(shortString);
             });
 
             it('should coerce the value that is too long by trimming it', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .maxLength(4)
                     .coerce()
                     .default('defaultValue');
 
-                expect(_string.validate(tooLongString)).toBe(correctLengthString);
+                expect(_schema.validate(tooLongString)).toBe(correctLengthString);
             });
         });
     });
@@ -250,37 +250,37 @@ describe('String', () => {
 
         describe('validation', () => {
             it('should continue if the value contains only alpha characters', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .alpha();
 
-                expect(_string.validate(alphaCharacters)).toBe(alphaCharacters);
+                expect(_schema.validate(alphaCharacters)).toBe(alphaCharacters);
             });
 
             it('should throw if the value contains non-alpha characters', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .alpha();
 
-                expect(() => _string.validate(nonAlphaCharacters)).toThrow('containsNonAlphaCharacters');
+                expect(() => _schema.validate(nonAlphaCharacters)).toThrow('containsNonAlphaCharacters');
             });
         });
 
         describe('coersion', () => {
             it('should continue if the value contains only alpha characters', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .alpha()
                     .coerce()
                     .default('defaultValue');
 
-                expect(_string.validate(alphaCharacters)).toBe(alphaCharacters);
+                expect(_schema.validate(alphaCharacters)).toBe(alphaCharacters);
             });
 
             it('should coerce the value containing non-alpha characters by replacing it with the default value', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .alpha()
                     .coerce()
                     .default('defaultValue');
 
-                expect(_string.validate(nonAlphaCharacters)).toBe('defaultValue');
+                expect(_schema.validate(nonAlphaCharacters)).toBe('defaultValue');
             });
         });
     });
@@ -291,37 +291,176 @@ describe('String', () => {
 
         describe('validation', () => {
             it('should continue if the value contains only alpha numeric characters', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .alphaNum();
 
-                expect(_string.validate(alphaNumCharacters)).toBe(alphaNumCharacters);
+                expect(_schema.validate(alphaNumCharacters)).toBe(alphaNumCharacters);
             });
 
             it('should throw if the value contains non-alpha numeric characters', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .alphaNum();
 
-                expect(() => _string.validate(nonAlphaNumCharacters)).toThrow('containsNonAlphaNumericCharacters');
+                expect(() => _schema.validate(nonAlphaNumCharacters)).toThrow('containsNonAlphaNumericCharacters');
             });
         });
 
         describe('coersion', () => {
             it('should continue if the value contains only alpha numeric characters', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .alphaNum()
                     .coerce()
                     .default('defaultValue');
 
-                expect(_string.validate(alphaNumCharacters)).toBe(alphaNumCharacters);
+                expect(_schema.validate(alphaNumCharacters)).toBe(alphaNumCharacters);
             });
 
             it('should coerce the value containing non-alpha numeric characters by replacing it with the default value', () => {
-                const _string = new _String()
+                const _schema = new _String()
                     .alphaNum()
                     .coerce()
                     .default('defaultValue');
 
-                expect(_string.validate(nonAlphaNumCharacters)).toBe('defaultValue');
+                expect(_schema.validate(nonAlphaNumCharacters)).toBe('defaultValue');
+            });
+        });
+    });
+
+    describe('trim', () => {
+        const noTrimming = 'A string that does not need trimming';
+        const requiresTrimming = '  A string that does require trimming    ';
+        const trimmedString = requiresTrimming.trim();
+
+        describe('validation', () => {
+            it('should continue if the value does not require trimming', () => {
+                const _schema = new _String()
+                    .trim();
+
+                expect(_schema.validate(noTrimming)).toBe(noTrimming);
+            });
+
+            it('should throw if the value requires trimmning', () => {
+                const _schema = new _String()
+                    .trim();
+
+                expect(() => _schema.validate(requiresTrimming)).toThrow('needsTrimming');
+            });
+
+            it('should trim the value if it required trimming and coerce is specified locally', () => {
+                const _schema = new _String()
+                    .trim(true);
+
+                expect(_schema.validate(requiresTrimming)).toBe(trimmedString);
+            });
+        });
+
+        describe('coersion', () => {
+            it('should continue if the value does not require trimming', () => {
+                const _schema = new _String()
+                    .trim()
+                    .coerce();
+
+                expect(_schema.validate(noTrimming)).toBe(noTrimming);
+            });
+
+            it('should trim the value if it requires trimmning', () => {
+                const _schema = new _String()
+                    .trim()
+                    .coerce();
+
+                expect(_schema.validate(requiresTrimming)).toBe(trimmedString);
+            });
+        });
+    });
+
+    describe('upperCase', () => {
+        const allUppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@£$%^&*()-_=+';
+        const lowercase = 'abcdefghijklmnopqrstuvwxyz0123456789!@£$%^&*()-_=+';
+
+        describe('validation', () => {
+            it('should continue if the value is all upper case', () => {
+                const _schema = new _String()
+                    .upperCase();
+
+                expect(_schema.validate(allUppercase)).toBe(allUppercase);
+            });
+
+            it('should throw if the value is not all upper case', () => {
+                const _schema = new _String()
+                    .upperCase();
+
+                expect(() => _schema.validate(lowercase)).toThrow('notUpperCase');
+            });
+
+            it('should make the value upper case if it is not already if coerce is specified locally', () => {
+                const _schema = new _String()
+                    .upperCase(true);
+
+                expect(_schema.validate(lowercase)).toBe(allUppercase);
+            });
+        });
+
+        describe('cohersion', () => {
+            it('should continue if the value is all upper case', () => {
+                const _schema = new _String()
+                    .upperCase()
+                    .coerce();
+
+                expect(_schema.validate(allUppercase)).toBe(allUppercase);
+            });
+
+            it('should make the value uppercase if it is not already', () => {
+                const _schema = new _String()
+                    .upperCase()
+                    .coerce();
+
+                expect(_schema.validate(lowercase)).toBe(allUppercase);
+            });
+        });
+    });
+
+    describe('lowerCase', () => {
+        const allLowerCase = 'abcdefghijklmnopqrstuvwxyz0123456789!@£$%^&*()-_=+';
+        const upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@£$%^&*()-_=+';
+
+        describe('validation', () => {
+            it('should continue if the value is all lower case', () => {
+                const _schema = new _String()
+                    .lowerCase();
+
+                expect(_schema.validate(allLowerCase)).toBe(allLowerCase);
+            });
+
+            it('should throw if the value is not all lower case', () => {
+                const _schema = new _String()
+                    .lowerCase();
+
+                expect(() => _schema.validate(upperCase)).toThrow('notLowerCase');
+            });
+
+            it('should make the value lower case if it is not already if coerce is specified locally', () => {
+                const _schema = new _String()
+                    .lowerCase(true);
+
+                expect(_schema.validate(upperCase)).toBe(allLowerCase);
+            });
+        });
+
+        describe('cohersion', () => {
+            it('should continue if the value is all lower case', () => {
+                const _schema = new _String()
+                    .lowerCase()
+                    .coerce();
+
+                expect(_schema.validate(allLowerCase)).toBe(allLowerCase);
+            });
+
+            it('should make the value lower case if it is not already', () => {
+                const _schema = new _String()
+                    .lowerCase()
+                    .coerce();
+
+                expect(_schema.validate(upperCase)).toBe(allLowerCase);
             });
         });
     });
